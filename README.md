@@ -23,7 +23,7 @@ reaction_from_h5_to_json_file(
 ```
 
 There are other API functions that might be of interest like 
-```reaction_from_h5_to_json```, ```reaction_from_h5``` and ```reaction_in_h5```
+```reaction_from_h5_to_json```, ```reaction_from_h5``` and ```reactions_in_h5```
 
 # Command line usage
 
