@@ -10,20 +10,43 @@ commonly accepted inputs. This tool is used for the generation of the
 
 # Python API usage
 
-Extracting a single reaction from the h5 file using the API
+Extracting a single reaction from the h5 file using the API and saving as a
+CSV or JSON file.
 
 ```python
-from openmc_data_to_json import reaction_from_h5_to_json_file
+import openmc_data_to_json as odj
 
-reaction_from_h5_to_json_file(
+odj.cross_section_from_h5_to_file(
     input='Li6.h5',
     output='tritium_production.json',
-    reaction='(n,Xt)'
+    reaction='(n,Xt)',
+    format='json'  # csv is also acceptable
 )
 ```
 
-There are other API functions that might be of interest like 
-```reaction_from_h5_to_json```, ```reaction_from_h5``` and ```reactions_in_h5```
+It is also possible to return the h5 info as a dictionary with keys for
+'cross section', 'energy', 'element' and other info on the nuclius
+
+```python
+import openmc_data_to_json as odj
+
+reaction = odj.cross_section_from_h5_to_dict(
+    input='Be9.h5',
+    reaction='(n,2n)'
+)
+```
+
+A h5 file can be checked for reactions to see if particular reactions exist
+
+```python
+import openmc_data_to_json as odj
+
+reaction = odj.reactions_in_h5(
+    input='Fe56.h5',
+    reaction='(n,g)'
+)
+```
+
 
 # Command line usage
 
