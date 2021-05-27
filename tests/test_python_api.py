@@ -3,16 +3,18 @@ import os
 import unittest
 from pathlib import Path
 
-from openmc_data_to_json import reaction_from_h5_to_json_file, reaction_from_h5_to_json, reactions_in_h5
+from openmc_data_to_json import (cross_section_h5_file_to_json_files,
+                                 cross_section_h5_files_to_json_files,
+                                 cross_section_h5_to_json, reactions_in_h5)
 
 
 class TestApiUsage(unittest.TestCase):
 
-    def test_reaction_from_h5_to_json_file(self):
+    def test_cross_section_h5_file_to_json_files(self):
 
         os.system('rm *.json')
 
-        reaction_from_h5_to_json_file(
+        cross_section_h5_file_to_json_files(
             input='Li6.h5',
             output='tritium_production.json',
             reaction='(n,Xt)'
@@ -20,9 +22,9 @@ class TestApiUsage(unittest.TestCase):
 
         assert Path('tritium_production.json').exists
 
-    def test_reaction_from_h5_to_json(self):
+    def test_cross_section_h5_to_json(self):
 
-        energy, xs = reaction_from_h5_to_json(
+        energy, xs = cross_section_h5_to_json(
             input='Li6.h5',
             output='tritium_production.json',
             reaction='(n,Xt)'

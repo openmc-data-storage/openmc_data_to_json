@@ -1,3 +1,4 @@
 
-from .core import openmc_h5_to_json
-from .core import cross_section_from_h5_to_file
+from .core import (cross_section_h5_file_to_json_files,
+                   cross_section_h5_files_to_json_files,
+                   cross_section_h5_to_json, reactions_in_h5)

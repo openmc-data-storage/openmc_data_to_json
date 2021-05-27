@@ -1,9 +1,12 @@
 
-import h5py
-import openmc
-import numpy as np
-from pathlib import Path
 import json
+from pathlib import Path 
+
+
+import h5py
+import numpy as np
+import openmc
+from typing import Optional
 
 ELEMENT_NAME = {0: 'neutron', 1: 'Hydrogen', 2: 'Helium', 3: 'Lithium',
                  4: 'Beryllium', 5: 'Boron', 6: 'Carbon', 7: 'Nitrogen',
@@ -44,110 +47,113 @@ ELEMENT_NAME = {0: 'neutron', 1: 'Hydrogen', 2: 'Helium', 3: 'Lithium',
                  115: 'Moscovium', 116: 'Livermorium', 117: 'Tennessine',
                  118: 'Oganesson'}
 
+
 def find_REACTION_NAME(incident_particle_symbol, keynumber):
-    REACTION_NAME = {1: '('+incident_particle_symbol+',total)', 
-                    2: '('+incident_particle_symbol+',elastic)', 
-                    4: '('+incident_particle_symbol+',level)',
-                    5: '('+incident_particle_symbol+',misc)', 
-                    11: '('+incident_particle_symbol+',2nd)', 
-                    16: '('+incident_particle_symbol+',2n)', 
-                    17: '('+incident_particle_symbol+',3n)',
-                    18: '('+incident_particle_symbol+',fission)', 
-                    19: '('+incident_particle_symbol+',f)', 
-                    20: '('+incident_particle_symbol+',nf)', 
-                    21: '('+incident_particle_symbol+',2nf)',
-                    22: '('+incident_particle_symbol+',na)', 
-                    23: '('+incident_particle_symbol+',n3a)', 
-                    24: '('+incident_particle_symbol+',2na)', 
-                    25: '('+incident_particle_symbol+',3na)',
-                    27: '('+incident_particle_symbol+',absorption)', 
-                    28: '('+incident_particle_symbol+',np)', 
-                    29: '('+incident_particle_symbol+',n2a)',
-                    30: '('+incident_particle_symbol+',2n2a)', 
-                    32: '('+incident_particle_symbol+',nd)', 
-                    33: '('+incident_particle_symbol+',nt)', 
-                    34: '('+incident_particle_symbol+',nHe-3)',
-                    35: '('+incident_particle_symbol+',nd2a)', 
-                    36: '('+incident_particle_symbol+',nt2a)', 
-                    37: '('+incident_particle_symbol+',4n)', 
-                    38: '('+incident_particle_symbol+',3nf)',
-                    41: '('+incident_particle_symbol+',2np)', 
-                    42: '('+incident_particle_symbol+',3np)', 
-                    44: '('+incident_particle_symbol+',n2p)', 
-                    45: '('+incident_particle_symbol+',npa)',
-                    91: '('+incident_particle_symbol+',nc)', 
-                    101: '('+incident_particle_symbol+',disappear)', 
-                    102: '('+incident_particle_symbol+',gamma)',
-                    103: '('+incident_particle_symbol+',p)', 
-                    104: '('+incident_particle_symbol+',d)', 
-                    105: '('+incident_particle_symbol+',t)', 
-                    106: '('+incident_particle_symbol+',3He)',
-                    107: '('+incident_particle_symbol+',a)', 
-                    108: '('+incident_particle_symbol+',2a)', 
-                    109: '('+incident_particle_symbol+',3a)', 
-                    111: '('+incident_particle_symbol+',2p)',
-                    112: '('+incident_particle_symbol+',pa)', 
-                    113: '('+incident_particle_symbol+',t2a)', 
-                    114: '('+incident_particle_symbol+',d2a)', 
-                    115: '('+incident_particle_symbol+',pd)',
-                    116: '('+incident_particle_symbol+',pt)', 
-                    117: '('+incident_particle_symbol+',da)', 
-                    152: '('+incident_particle_symbol+',5n)', 
-                    153: '('+incident_particle_symbol+',6n)',
-                    154: '('+incident_particle_symbol+',2nt)', 
-                    155: '('+incident_particle_symbol+',ta)', 
-                    156: '('+incident_particle_symbol+',4np)', 
-                    157: '('+incident_particle_symbol+',3nd)',
-                    158: '('+incident_particle_symbol+',nda)', 
-                    159: '('+incident_particle_symbol+',2npa)', 
-                    160: '('+incident_particle_symbol+',7n)', 
-                    161: '('+incident_particle_symbol+',8n)',
-                    162: '('+incident_particle_symbol+',5np)', 
-                    163: '('+incident_particle_symbol+',6np)', 
-                    164: '('+incident_particle_symbol+',7np)', 
-                    165: '('+incident_particle_symbol+',4na)',
-                    166: '('+incident_particle_symbol+',5na)', 
-                    167: '('+incident_particle_symbol+',6na)', 
-                    168: '('+incident_particle_symbol+',7na)', 
-                    169: '('+incident_particle_symbol+',4nd)',
-                    170: '('+incident_particle_symbol+',5nd)', 
-                    171: '('+incident_particle_symbol+',6nd)', 
-                    172: '('+incident_particle_symbol+',3nt)', 
-                    173: '('+incident_particle_symbol+',4nt)',
-                    174: '('+incident_particle_symbol+',5nt)', 
-                    175: '('+incident_particle_symbol+',6nt)', 
-                    176: '('+incident_particle_symbol+',2n3He)',
-                    177: '('+incident_particle_symbol+',3n3He)', 
-                    178: '('+incident_particle_symbol+',4n3He)', 
-                    179: '('+incident_particle_symbol+',3n2p)',
-                    180: '('+incident_particle_symbol+',3n3a)', 
-                    181: '('+incident_particle_symbol+',3npa)', 
-                    182: '('+incident_particle_symbol+',dt)',
-                    183: '('+incident_particle_symbol+',npd)', 
-                    184: '('+incident_particle_symbol+',npt)', 
-                    185: '('+incident_particle_symbol+',ndt)',
-                    186: '('+incident_particle_symbol+',np3He)', 
-                    187: '('+incident_particle_symbol+',nd3He)', 
-                    188: '('+incident_particle_symbol+',nt3He)',
-                    189: '('+incident_particle_symbol+',nta)', 
-                    190: '('+incident_particle_symbol+',2n2p)', 
-                    191: '('+incident_particle_symbol+',p3He)',
-                    192: '('+incident_particle_symbol+',d3He)', 
-                    193: '('+incident_particle_symbol+',3Hea)', 
-                    194: '('+incident_particle_symbol+',4n2p)',
-                    195: '('+incident_particle_symbol+',4n2a)', 
-                    196: '('+incident_particle_symbol+',4npa)', 
-                    197: '('+incident_particle_symbol+',3p)',
-                    198: '('+incident_particle_symbol+',n3p)', 
-                    199: '('+incident_particle_symbol+',3n2pa)', 
-                    200: '('+incident_particle_symbol+',5n2p)', 
-                    444: '('+incident_particle_symbol+',damage)',
-                    649: '('+incident_particle_symbol+',pc)', 
-                    699: '('+incident_particle_symbol+',dc)', 
-                    749: '('+incident_particle_symbol+',tc)', 
-                    799: '('+incident_particle_symbol+',3Hec)',
-                    849: '('+incident_particle_symbol+',ac)', 
-                    891: '('+incident_particle_symbol+',2nc)'}
+    REACTION_NAME = {
+        1: '('+incident_particle_symbol+',total)', 
+        2: '('+incident_particle_symbol+',elastic)', 
+        4: '('+incident_particle_symbol+',level)',
+        5: '('+incident_particle_symbol+',misc)', 
+        11: '('+incident_particle_symbol+',2nd)', 
+        16: '('+incident_particle_symbol+',2n)', 
+        17: '('+incident_particle_symbol+',3n)',
+        18: '('+incident_particle_symbol+',fission)', 
+        19: '('+incident_particle_symbol+',f)', 
+        20: '('+incident_particle_symbol+',nf)', 
+        21: '('+incident_particle_symbol+',2nf)',
+        22: '('+incident_particle_symbol+',na)', 
+        23: '('+incident_particle_symbol+',n3a)', 
+        24: '('+incident_particle_symbol+',2na)', 
+        25: '('+incident_particle_symbol+',3na)',
+        27: '('+incident_particle_symbol+',absorption)', 
+        28: '('+incident_particle_symbol+',np)', 
+        29: '('+incident_particle_symbol+',n2a)',
+        30: '('+incident_particle_symbol+',2n2a)', 
+        32: '('+incident_particle_symbol+',nd)', 
+        33: '('+incident_particle_symbol+',nt)', 
+        34: '('+incident_particle_symbol+',nHe-3)',
+        35: '('+incident_particle_symbol+',nd2a)', 
+        36: '('+incident_particle_symbol+',nt2a)', 
+        37: '('+incident_particle_symbol+',4n)', 
+        38: '('+incident_particle_symbol+',3nf)',
+        41: '('+incident_particle_symbol+',2np)', 
+        42: '('+incident_particle_symbol+',3np)', 
+        44: '('+incident_particle_symbol+',n2p)', 
+        45: '('+incident_particle_symbol+',npa)',
+        91: '('+incident_particle_symbol+',nc)', 
+        101: '('+incident_particle_symbol+',disappear)', 
+        102: '('+incident_particle_symbol+',gamma)',
+        103: '('+incident_particle_symbol+',p)', 
+        104: '('+incident_particle_symbol+',d)', 
+        105: '('+incident_particle_symbol+',t)', 
+        106: '('+incident_particle_symbol+',3He)',
+        107: '('+incident_particle_symbol+',a)', 
+        108: '('+incident_particle_symbol+',2a)', 
+        109: '('+incident_particle_symbol+',3a)', 
+        111: '('+incident_particle_symbol+',2p)',
+        112: '('+incident_particle_symbol+',pa)', 
+        113: '('+incident_particle_symbol+',t2a)', 
+        114: '('+incident_particle_symbol+',d2a)', 
+        115: '('+incident_particle_symbol+',pd)',
+        116: '('+incident_particle_symbol+',pt)', 
+        117: '('+incident_particle_symbol+',da)', 
+        152: '('+incident_particle_symbol+',5n)', 
+        153: '('+incident_particle_symbol+',6n)',
+        154: '('+incident_particle_symbol+',2nt)', 
+        155: '('+incident_particle_symbol+',ta)', 
+        156: '('+incident_particle_symbol+',4np)', 
+        157: '('+incident_particle_symbol+',3nd)',
+        158: '('+incident_particle_symbol+',nda)', 
+        159: '('+incident_particle_symbol+',2npa)', 
+        160: '('+incident_particle_symbol+',7n)', 
+        161: '('+incident_particle_symbol+',8n)',
+        162: '('+incident_particle_symbol+',5np)', 
+        163: '('+incident_particle_symbol+',6np)', 
+        164: '('+incident_particle_symbol+',7np)', 
+        165: '('+incident_particle_symbol+',4na)',
+        166: '('+incident_particle_symbol+',5na)', 
+        167: '('+incident_particle_symbol+',6na)', 
+        168: '('+incident_particle_symbol+',7na)', 
+        169: '('+incident_particle_symbol+',4nd)',
+        170: '('+incident_particle_symbol+',5nd)', 
+        171: '('+incident_particle_symbol+',6nd)', 
+        172: '('+incident_particle_symbol+',3nt)', 
+        173: '('+incident_particle_symbol+',4nt)',
+        174: '('+incident_particle_symbol+',5nt)', 
+        175: '('+incident_particle_symbol+',6nt)', 
+        176: '('+incident_particle_symbol+',2n3He)',
+        177: '('+incident_particle_symbol+',3n3He)', 
+        178: '('+incident_particle_symbol+',4n3He)', 
+        179: '('+incident_particle_symbol+',3n2p)',
+        180: '('+incident_particle_symbol+',3n3a)', 
+        181: '('+incident_particle_symbol+',3npa)', 
+        182: '('+incident_particle_symbol+',dt)',
+        183: '('+incident_particle_symbol+',npd)', 
+        184: '('+incident_particle_symbol+',npt)', 
+        185: '('+incident_particle_symbol+',ndt)',
+        186: '('+incident_particle_symbol+',np3He)', 
+        187: '('+incident_particle_symbol+',nd3He)', 
+        188: '('+incident_particle_symbol+',nt3He)',
+        189: '('+incident_particle_symbol+',nta)', 
+        190: '('+incident_particle_symbol+',2n2p)', 
+        191: '('+incident_particle_symbol+',p3He)',
+        192: '('+incident_particle_symbol+',d3He)', 
+        193: '('+incident_particle_symbol+',3Hea)', 
+        194: '('+incident_particle_symbol+',4n2p)',
+        195: '('+incident_particle_symbol+',4n2a)', 
+        196: '('+incident_particle_symbol+',4npa)', 
+        197: '('+incident_particle_symbol+',3p)',
+        198: '('+incident_particle_symbol+',n3p)', 
+        199: '('+incident_particle_symbol+',3n2pa)', 
+        200: '('+incident_particle_symbol+',5n2p)', 
+        444: '('+incident_particle_symbol+',damage)',
+        649: '('+incident_particle_symbol+',pc)', 
+        699: '('+incident_particle_symbol+',dc)', 
+        749: '('+incident_particle_symbol+',tc)', 
+        799: '('+incident_particle_symbol+',3Hec)',
+        849: '('+incident_particle_symbol+',ac)', 
+        891: '('+incident_particle_symbol+',2nc)'}
+
     REACTION_NAME.update({i: '('+incident_particle_symbol+',n{})'.format(i - 50) for i in range(50, 91)})
     REACTION_NAME.update({i: '('+incident_particle_symbol+',p{})'.format(i - 600) for i in range(600, 649)})
     REACTION_NAME.update({i: '('+incident_particle_symbol+',d{})'.format(i - 650) for i in range(650, 699)})
@@ -171,17 +177,58 @@ def find_REACTION_NAME(incident_particle_symbol, keynumber):
     return REACTION_NAME[keynumber]
 
 def cross_section_h5_files_to_json_files(
-    
-)
+    filenames: str,
+    output_dir: str='',
+    library: str='',
+    reaction: str = 'all',
+    index_filename: str = None
+):
+    output_filenames = []
+    index_dict = {}
+    for filename in filenames:
+        dict_of_reactions = cross_section_h5_to_json(
+            filename=filename,
+            library=library,
+            reaction=reaction
+        )
+        for key, value in dict_of_reactions.items():
+            output_filename = Path(output_dir)/Path(key+'.json')
+            with open(output_filename, 'w') as fout:
+                json.dump(value, fout, indent = 2)
+            output_filenames.append(str(output_filename))
+
+        if index_filename:
+            for key, value in dict_of_reactions.items():
+                del value['cross section']
+                del value['energy']
+            
+            index_dict.update(dict_of_reactions)
+            
+            # output_filename = Path(filename).stem
+            # output_filename = Path(output_filename).with_suffix('.json')
+            # output_filename = Path(output_dir)/output_filename
+
+    if index_filename:
+        with open(Path(output_dir)/index_filename, 'w') as fout:
+            json.dump(index_dict, fout, indent = 2)
+        output_filenames.append(str(index_filename))
+
+    return output_filenames
+
 
 def cross_section_h5_file_to_json_files(
-    filename,
-    output_dir='',
-    library='',
-    include_index_file = True
+    filename: str,
+    output_dir: str = '',
+    library: str = '',
+    index_filename: str = None,
+    reaction='all'
 ):
     
-    dict_of_reactions = openmc_h5_to_json(filename, library='')
+    dict_of_reactions = cross_section_h5_to_json(
+        filename=filename,
+        library=library,
+        reaction=reaction
+    )
     output_filenames = []
     for key, value in dict_of_reactions.items():
         output_filename = Path(output_dir)/Path(key+'.json')
@@ -189,27 +236,39 @@ def cross_section_h5_file_to_json_files(
             json.dump(value, fout, indent = 2)
         output_filenames.append(str(output_filename))
 
-    if include_index_file:
+    if index_filename:
         for key, value in dict_of_reactions.items():
             del value['cross section']
             del value['energy']
         
-        output_filename = Path(filename).stem
-        output_filename = Path(output_filename).with_suffix('.json')
-        output_filename = Path(output_dir)/output_filename
-        with open(output_filename, 'w') as fout:
+        # output_filename = Path(filename).stem
+        # output_filename = Path(output_filename).with_suffix('.json')
+        # output_filename = Path(output_dir)/output_filename
+
+        with open(Path(output_dir)/index_filename, 'w') as fout:
             json.dump(dict_of_reactions, fout, indent = 2)
-        output_filenames.append(str(output_filename))
-        print(output_filename)
+        output_filenames.append(str(index_filename))
     
     return output_filenames
 
 
-def openmc_h5_to_json(filename, library=''):
+def cross_section_h5_to_json(
+    filename: str,
+    library='',
+    reaction='all',
+):
     dict_of_reactions = {}
     isotope_object, particle = open_h5(filename)
     incident_particle_symbol = particle[0]
-    for reaction in isotope_object.reactions:
+    
+    if reaction == 'all':
+        reactions = []
+        for key, value in isotope_object.reactions.items():
+            reactions.append(key)
+    elif isinstance(reaction, (str, int)):
+        reactions = [reaction]
+    
+    for reaction in reactions:
         temperatures = isotope_object[reaction].xs.keys()
         for temperature in temperatures:
             energy = isotope_object.energy[temperature]
@@ -261,10 +320,14 @@ def openmc_h5_to_json(filename, library=''):
     return dict_of_reactions
 
 
-def reactions_in_h5(filename):
+def reactions_in_h5(
+    filename: str
+):
     return open_h5(filename)[0].reactions
 
-def open_h5(filename):
+def open_h5(
+    filename: str
+):
 
     with h5py.File(filename) as h5file:
         # same method as openmc library.py
