@@ -1,0 +1,46 @@
+#!/usr/bin/python
+
+import argparse
+import json
+from pathlib import Path
+
+from openmc_data_to_json import cross_section_h5_to_json, reactions_in_h5
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        '-r', '--reactions',
+        nargs='*',
+        default='all',
+        help="The reactions to extract, defaults to 'all' which extracts "\
+             "all the reactions. MT numbers e.g. 16 105 205 or reaction "\
+             "descriptions (n,2n) (n,nt) (n,Xt) are accepted"
+    )
+
+    parser.add_argument(
+        '-i', '--input',
+        type=Path, default=None,
+        help='Input h5 cross section file',
+        required=True
+    )
+
+    parser.add_argument(
+        '-o', '--output',
+        type=Path, default='dagmc_removed_tag.h5m',
+        help='Output direct json file'
+    )
+
+    args = parser.parse_args()
+
+    print(reactions_in_h5(args.input))
+
+    dict_of_reactions = cross_section_h5_to_json(
+        filename=args.input,
+        library='',
+        reaction=args.reactions
+    )
+
+    with open(args.output, 'w') as fout:
+        json.dump(dict_of_reactions, fout, indent = 2)
