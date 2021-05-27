@@ -10,7 +10,7 @@ class TestUsage(unittest.TestCase):
 
         os.system('rm *.json')
 
-        os.system("openmc-data-to-json -i Be9.h5 -r (n,2n) -o my_reaction.json")
+        os.system("openmc-data-to-json -i tests/Be9.h5 -r n,2n -o my_reaction.json")
 
         assert Path('my_reaction.json').exists
 
@@ -18,7 +18,7 @@ class TestUsage(unittest.TestCase):
 
         os.system('rm *.json')
 
-        os.system("openmc-data-to-json -i Be9.h5 -r (n,f) -o my_reaction.json")
+        os.system("openmc-data-to-json -i tests/Be9.h5 -r n,f -o my_reaction.json")
 
         assert Path('my_reaction.json').exists is False
 

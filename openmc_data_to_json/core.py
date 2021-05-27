@@ -8,47 +8,52 @@ import numpy as np
 import openmc
 from typing import Optional
 
-ELEMENT_NAME = {0: 'neutron', 1: 'Hydrogen', 2: 'Helium', 3: 'Lithium',
-                 4: 'Beryllium', 5: 'Boron', 6: 'Carbon', 7: 'Nitrogen',
-                 8: 'Oxygen', 9: 'Fluorine', 10: 'Neon', 11: 'Sodium',
-                 12: 'Magnesium', 13: 'Aluminium', 14: 'Silicon',
-                 15: 'Phosphorus', 16: 'Sulfur', 17: 'Chlorine',
-                 18: 'Argon', 19: 'Potassium', 20: 'Calcium',
-                 21: 'Scandium', 22: 'Titanium', 23: 'Vanadium',
-                 24: 'Chromium', 25: 'Manganese', 26: 'Iron',
-                 27: 'Cobalt', 28: 'Nickel', 29: 'Copper', 30: 'Zinc',
-                 31: 'Gallium', 32: 'Germanium', 33: 'Arsenic',
-                 34: 'Selenium', 35: 'Bromine', 36: 'Krypton',
-                 37: 'Rubidium', 38: 'Strontium', 39: 'Yttrium',
-                 40: 'Zirconium', 41: 'Niobium', 42: 'Molybdenum',
-                 43: 'Technetium', 44: 'Ruthenium', 45: 'Rhodium',
-                 46: 'Palladium', 47: 'Silver', 48: 'Cadmium', 49: 'Indium',
-                 50: 'Tin', 51: 'Antimony', 52: 'Tellurium', 53: 'Iodine',
-                 54: 'Xenon', 55: 'Caesium', 56: 'Barium', 57: 'Lanthanum',
-                 58: 'Cerium', 59: 'Praseodymium', 60: 'Neodymium',
-                 61: 'Promethium', 62: 'Samarium', 63: 'Europium', 
-                 64: 'Gadolinium', 65: 'Terbium', 66: 'Dysprosium',
-                 67: 'Holmium', 68: 'Erbium', 69: 'Thulium',
-                 70: 'Ytterbium', 71: 'Lutetium', 72: 'Hafnium',
-                 73: 'Tantalum', 74: 'Tungsten', 75: 'Rhenium',
-                 76: 'Osmium', 77: 'Iridium', 78: 'Platinum',
-                 79: 'Gold', 80: 'Mercury', 81: 'Thallium',
-                 82: 'Lead', 83: 'Bismuth', 84: 'Polonium',
-                 85: 'Astatine', 86: 'Radon', 87: 'Francium',
-                 88: 'Radium', 89: 'Actinium', 90: 'Thorium',
-                 91: 'Protactinium', 92: 'Uranium', 93: 'Neptunium',
-                 94: 'Plutonium', 95: 'Americium', 96: 'Curium',
-                 97: 'Berkelium', 98: 'Californium', 99: 'Einsteinium',
-                 100: 'Fermium', 101: 'Mendelevium', 102: 'Nobelium',
-                 103: 'Lawrencium', 104: 'Rutherfordium', 105: 'Dubnium',
-                 106: 'Seaborgium', 107: 'Bohrium', 108: 'Hassium',
-                 109: 'Meitnerium', 110: 'Darmstadtium', 111: 'Roentgenium',
-                 112: 'Copernicium', 113: 'Nihonium', 114: 'Flerovium',
-                 115: 'Moscovium', 116: 'Livermorium', 117: 'Tennessine',
-                 118: 'Oganesson'}
+ELEMENT_NAME = {
+    0: 'neutron', 1: 'Hydrogen', 2: 'Helium', 3: 'Lithium',
+    4: 'Beryllium', 5: 'Boron', 6: 'Carbon', 7: 'Nitrogen',
+    8: 'Oxygen', 9: 'Fluorine', 10: 'Neon', 11: 'Sodium',
+    12: 'Magnesium', 13: 'Aluminium', 14: 'Silicon',
+    15: 'Phosphorus', 16: 'Sulfur', 17: 'Chlorine',
+    18: 'Argon', 19: 'Potassium', 20: 'Calcium',
+    21: 'Scandium', 22: 'Titanium', 23: 'Vanadium',
+    24: 'Chromium', 25: 'Manganese', 26: 'Iron',
+    27: 'Cobalt', 28: 'Nickel', 29: 'Copper', 30: 'Zinc',
+    31: 'Gallium', 32: 'Germanium', 33: 'Arsenic',
+    34: 'Selenium', 35: 'Bromine', 36: 'Krypton',
+    37: 'Rubidium', 38: 'Strontium', 39: 'Yttrium',
+    40: 'Zirconium', 41: 'Niobium', 42: 'Molybdenum',
+    43: 'Technetium', 44: 'Ruthenium', 45: 'Rhodium',
+    46: 'Palladium', 47: 'Silver', 48: 'Cadmium', 49: 'Indium',
+    50: 'Tin', 51: 'Antimony', 52: 'Tellurium', 53: 'Iodine',
+    54: 'Xenon', 55: 'Caesium', 56: 'Barium', 57: 'Lanthanum',
+    58: 'Cerium', 59: 'Praseodymium', 60: 'Neodymium',
+    61: 'Promethium', 62: 'Samarium', 63: 'Europium', 
+    64: 'Gadolinium', 65: 'Terbium', 66: 'Dysprosium',
+    67: 'Holmium', 68: 'Erbium', 69: 'Thulium',
+    70: 'Ytterbium', 71: 'Lutetium', 72: 'Hafnium',
+    73: 'Tantalum', 74: 'Tungsten', 75: 'Rhenium',
+    76: 'Osmium', 77: 'Iridium', 78: 'Platinum',
+    79: 'Gold', 80: 'Mercury', 81: 'Thallium',
+    82: 'Lead', 83: 'Bismuth', 84: 'Polonium',
+    85: 'Astatine', 86: 'Radon', 87: 'Francium',
+    88: 'Radium', 89: 'Actinium', 90: 'Thorium',
+    91: 'Protactinium', 92: 'Uranium', 93: 'Neptunium',
+    94: 'Plutonium', 95: 'Americium', 96: 'Curium',
+    97: 'Berkelium', 98: 'Californium', 99: 'Einsteinium',
+    100: 'Fermium', 101: 'Mendelevium', 102: 'Nobelium',
+    103: 'Lawrencium', 104: 'Rutherfordium', 105: 'Dubnium',
+    106: 'Seaborgium', 107: 'Bohrium', 108: 'Hassium',
+    109: 'Meitnerium', 110: 'Darmstadtium', 111: 'Roentgenium',
+    112: 'Copernicium', 113: 'Nihonium', 114: 'Flerovium',
+    115: 'Moscovium', 116: 'Livermorium', 117: 'Tennessine',
+    118: 'Oganesson'
+}
 
+# for reaction in REACTION_NAME: 
+#     REACTION_NAME[reaction] = REACTION_NAME[reaction][3:-1]
+def make_REACTION_DICT(incident_particle_symbol='n'):
 
-def find_REACTION_NAME(incident_particle_symbol, keynumber):
+    print('incident_particle_symbol pasased', incident_particle_symbol)
     REACTION_NAME = {
         1: '('+incident_particle_symbol+',total)', 
         2: '('+incident_particle_symbol+',elastic)', 
@@ -162,24 +167,35 @@ def find_REACTION_NAME(incident_particle_symbol, keynumber):
     REACTION_NAME.update({i: '('+incident_particle_symbol+',a{})'.format(i - 800) for i in range(800, 849)})
     REACTION_NAME.update({i: '('+incident_particle_symbol+',2n{})'.format(i - 875) for i in range(875, 891)})
 
-    REACTION_NAME[3]='('+incident_particle_symbol+',nonelastic)'
-    REACTION_NAME[203]='('+incident_particle_symbol+',Xp)'
-    REACTION_NAME[204]='('+incident_particle_symbol+',Xd)'
-    REACTION_NAME[205]='('+incident_particle_symbol+',Xt)'
-    REACTION_NAME[206]='('+incident_particle_symbol+',3He)'
-    REACTION_NAME[207]='('+incident_particle_symbol+',Xa)'
-    REACTION_NAME[301]='('+incident_particle_symbol+',heat)'
-    REACTION_NAME[901]='('+incident_particle_symbol+',displacement NRT)'
+    REACTION_NAME[3] = '('+incident_particle_symbol+',nonelastic)'
+    REACTION_NAME[203] = '('+incident_particle_symbol+',Xp)'
+    REACTION_NAME[204] = '('+incident_particle_symbol+',Xd)'
+    REACTION_NAME[205] = '('+incident_particle_symbol+',Xt)'
+    REACTION_NAME[206] = '('+incident_particle_symbol+',3He)'
+    REACTION_NAME[207] = '('+incident_particle_symbol+',Xa)'
+    REACTION_NAME[301] = '('+incident_particle_symbol+',heat)'
+    REACTION_NAME[901] = '('+incident_particle_symbol+',displacement NRT)'
 
-    # for reaction in REACTION_NAME: 
-    #     REACTION_NAME[reaction] = REACTION_NAME[reaction][3:-1]
+    return REACTION_NAME
+
+
+def find_REACTION_MT(val, incident_particle_symbol='n'):
+    for key, value in make_REACTION_DICT(incident_particle_symbol).items():
+        if val == value:
+            return key
+
+
+def find_REACTION_NAME(keynumber, incident_particle_symbol='n'):
+
+    REACTION_NAME = make_REACTION_DICT(incident_particle_symbol)
 
     return REACTION_NAME[keynumber]
 
+
 def cross_section_h5_files_to_json_files(
     filenames: str,
-    output_dir: str='',
-    library: str='',
+    output_dir: str = '',
+    library: str = '',
     reaction: str = 'all',
     index_filename: str = None
 ):
@@ -251,6 +267,22 @@ def cross_section_h5_file_to_json_files(
     
     return output_filenames
 
+def cross_section_h5_file_to_json_file(
+    filename,
+    output='my_reactions.json',
+    reaction='all',
+    library=''
+):
+    dict_of_reactions = cross_section_h5_to_json(
+        filename=filename,
+        library=library,
+        reaction=reaction
+    )
+
+    with open(output, 'w') as fout:
+        json.dump(dict_of_reactions, fout, indent = 2)
+    
+    return output 
 
 def cross_section_h5_to_json(
     filename: str,
@@ -267,8 +299,20 @@ def cross_section_h5_to_json(
             reactions.append(key)
     elif isinstance(reaction, (str, int)):
         reactions = [reaction]
+    else:
+        reactions = reaction
     
+    reaction_mt_numbers = []
     for reaction in reactions:
+        if reaction.isnumeric():
+            reaction_mt_numbers.append(int(reaction))
+        else:
+            reaction_mt_numbers.append(find_REACTION_MT(reaction))
+    
+    print('reactions', reactions)
+    print('reaction_mt_numbers', reaction_mt_numbers)
+    for reaction in reaction_mt_numbers:
+
         temperatures = isotope_object[reaction].xs.keys()
         for temperature in temperatures:
             energy = isotope_object.energy[temperature]
@@ -306,7 +350,7 @@ def cross_section_h5_to_json(
                     'Proton number / element':str(int(isotope_object._atomic_number)) +' '+isotope_object.atomic_symbol + ' '  + ELEMENT_NAME[int(isotope_object._atomic_number)],
                     'Mass number':mass_number,
                     'Neutron number':neutron_number,
-                    'MT number / reaction products':str(int(reaction)) + ' ' +find_REACTION_NAME(incident_particle_symbol,int(reaction)),
+                    'MT number / reaction products':str(int(reaction)) + ' ' +find_REACTION_NAME(reaction, incident_particle_symbol),
                     'Library':library,
                     # 'Temperature':temperature,
                     'cross section':shorter_cross_section.tolist(),
@@ -323,7 +367,12 @@ def cross_section_h5_to_json(
 def reactions_in_h5(
     filename: str
 ):
-    return open_h5(filename)[0].reactions
+    isotope_object, particle = open_h5(filename)
+    reactions = []
+    for key, value in isotope_object.reactions.items():
+        reactions.append(find_REACTION_NAME(value.mt))
+        # print(dir(value))
+    return reactions
 
 def open_h5(
     filename: str
