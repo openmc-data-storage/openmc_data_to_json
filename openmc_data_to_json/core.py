@@ -53,7 +53,6 @@ ELEMENT_NAME = {
 #     REACTION_NAME[reaction] = REACTION_NAME[reaction][3:-1]
 def make_REACTION_DICT(incident_particle_symbol='n'):
 
-    print('incident_particle_symbol pasased', incident_particle_symbol)
     REACTION_NAME = {
         1: '('+incident_particle_symbol+',total)', 
         2: '('+incident_particle_symbol+',elastic)', 
@@ -181,9 +180,9 @@ def make_REACTION_DICT(incident_particle_symbol='n'):
 
 def find_REACTION_MT(val, incident_particle_symbol='n'):
     for key, value in make_REACTION_DICT(incident_particle_symbol).items():
-        if val == value:
+        if val == value or val == value.strip('(').strip(')'):
             return key
-
+    raise ValueError('val not found', val)
 
 def find_REACTION_NAME(keynumber, incident_particle_symbol='n'):
 
@@ -232,6 +231,28 @@ def cross_section_h5_files_to_json_files(
     return output_filenames
 
 
+def cross_section_h5_files_to_json_file(
+    filenames,
+    output='my_reactions.json',
+    reaction='all',
+    library=''
+):
+
+    list_of_reactions = []
+    for filename in filenames:
+        dict_of_reactions = cross_section_h5_to_json(
+            filename=filename,
+            library=library,
+            reaction=reaction
+        )
+        list_of_reactions.append(dict_of_reactions)
+
+    with open(output, 'w') as fout:
+        json.dump(list_of_reactions, fout, indent = 2)
+
+    return output
+
+
 def cross_section_h5_file_to_json_files(
     filename: str,
     output_dir: str = '',
@@ -267,6 +288,7 @@ def cross_section_h5_file_to_json_files(
     
     return output_filenames
 
+
 def cross_section_h5_file_to_json_file(
     filename,
     output='my_reactions.json',
@@ -288,7 +310,7 @@ def cross_section_h5_to_json(
     filename: str,
     library='',
     reaction='all',
-):
+) -> dict:
     dict_of_reactions = {}
     isotope_object, particle = open_h5(filename)
     incident_particle_symbol = particle[0]
@@ -304,13 +326,13 @@ def cross_section_h5_to_json(
     
     reaction_mt_numbers = []
     for reaction in reactions:
-        if reaction.isnumeric():
+        if isinstance(reaction, (int, np.integer, np.int64)):
+            reaction_mt_numbers.append(reaction)
+        elif isinstance(reaction, str) and reaction.isnumeric():
             reaction_mt_numbers.append(int(reaction))
         else:
             reaction_mt_numbers.append(find_REACTION_MT(reaction))
     
-    print('reactions', reactions)
-    print('reaction_mt_numbers', reaction_mt_numbers)
     for reaction in reaction_mt_numbers:
 
         temperatures = isotope_object[reaction].xs.keys()
@@ -373,6 +395,7 @@ def reactions_in_h5(
         reactions.append(find_REACTION_NAME(value.mt))
         # print(dir(value))
     return reactions
+
 
 def open_h5(
     filename: str

@@ -25,17 +25,20 @@ class TestApiUsage(unittest.TestCase):
 
     def test_cross_section_h5_to_json(self):
 
-        energy, xs = cross_section_h5_to_json(
+        dict_of_reactions = cross_section_h5_to_json(
             filename='tests/Li6.h5',
             reaction='(n,Xt)'
         )
+
+        energy = dict_of_reactions['Li_6__n_205_294K']['energy']
+        xs = dict_of_reactions['Li_6__n_205_294K']['cross section']
 
         assert len(energy) == len(xs)
 
         for entry in energy:
             assert isinstance(entry, float)
         for entry in xs:
-            assert isinstance(xs, float)
+            assert isinstance(entry, float)
 
     def test_reactions_in_h5(self):
 
