@@ -1,4 +1,6 @@
 
+__version__ = "develop"
+
 from .core import (open_h5,
                    cross_section_h5_file_to_json_files,
                    cross_section_h5_files_to_json_files,
