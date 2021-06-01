@@ -199,7 +199,7 @@ def cross_section_h5_files_to_json_files(
     index_filename: str = None
 ):
     output_filenames = []
-    index_dict = {}
+    index_dict = []
     Path(output_dir).mkdir(parents=True, exist_ok=True)
     for filename in filenames:
         dict_of_reactions = cross_section_h5_to_json(
@@ -207,18 +207,21 @@ def cross_section_h5_files_to_json_files(
             library=library,
             reaction=reaction
         )
-        for key, value in dict_of_reactions.items():
-            output_filename = Path(output_dir)/Path(key+'.json')
+        # for key, value in dict_of_reactions.items():
+        for entry in dict_of_reactions:
+            output_filename = Path(output_dir)/Path(entry['uuid']+'.json')
             with open(output_filename, 'w') as fout:
-                json.dump(value, fout, indent=2)
+                json.dump(entry, fout, indent=2)
             output_filenames.append(str(output_filename))
 
         if index_filename:
-            for key, value in dict_of_reactions.items():
-                del value['cross section']
-                del value['energy']
+            # for key, value in dict_of_reactions.items():
+            for entry in dict_of_reactions:
+                del entry['cross section']
+                del entry['energy']
+                del entry['uuid']
 
-            index_dict.update(dict_of_reactions)
+            index_dict.append(dict_of_reactions)
 
             # output_filename = Path(filename).stem
             # output_filename = Path(output_filename).with_suffix('.json')
@@ -315,7 +318,7 @@ def cross_section_h5_to_json(
     library='',
     reaction='all',
 ) -> dict:
-    dict_of_reactions = {}
+    dict_of_reactions = []#{}
     isotope_object, particle = open_h5(filename)
     incident_particle_symbol = particle[0]
     
@@ -383,11 +386,11 @@ def cross_section_h5_to_json(
                     # 'Temperature':temperature,
                     'cross section':shorter_cross_section.tolist(),
                     'energy':shorter_energy.tolist(),
+                    'uuid':'_'.join([isotope_object.atomic_symbol, str(mass_number), library, incident_particle_symbol, str(int(reaction)), str(temperature)])
                 }
 
-                uuid = '_'.join([isotope_object.atomic_symbol, str(mass_number), library, incident_particle_symbol, str(int(reaction)), str(temperature)])
-
-                dict_of_reactions[uuid] = reaction_dict
+                # dict_of_reactions[uuid] = reaction_dict
+                dict_of_reactions.append(reaction_dict)
 
     return dict_of_reactions
 
