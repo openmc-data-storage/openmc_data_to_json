@@ -335,6 +335,8 @@ def cross_section_h5_to_json(
     
     for reaction in reaction_mt_numbers:
 
+        if reaction not in isotope_object.reactions:
+            raise ValueError('reaction not in avalaible reactions')
         temperatures = isotope_object[reaction].xs.keys()
         for temperature in temperatures:
             energy = isotope_object.energy[temperature]
