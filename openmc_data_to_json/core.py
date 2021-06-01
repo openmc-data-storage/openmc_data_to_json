@@ -6,7 +6,7 @@ from pathlib import Path
 import h5py
 import numpy as np
 import openmc
-from typing import Optional
+from typing import Optional, List
 
 ELEMENT_NAME = {
     0: 'neutron', 1: 'Hydrogen', 2: 'Helium', 3: 'Lithium',
@@ -192,7 +192,7 @@ def find_REACTION_NAME(keynumber, incident_particle_symbol='n'):
 
 
 def cross_section_h5_files_to_json_files(
-    filenames: str,
+    filenames: List[str],
     output_dir: str = '',
     library: str = '',
     reaction: str = 'all',
@@ -200,32 +200,33 @@ def cross_section_h5_files_to_json_files(
 ):
     output_filenames = []
     index_dict = {}
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
     for filename in filenames:
         dict_of_reactions = cross_section_h5_to_json(
-            filename=filename,
+            filename=str(filename),
             library=library,
             reaction=reaction
         )
         for key, value in dict_of_reactions.items():
             output_filename = Path(output_dir)/Path(key+'.json')
             with open(output_filename, 'w') as fout:
-                json.dump(value, fout, indent = 2)
+                json.dump(value, fout, indent=2)
             output_filenames.append(str(output_filename))
 
         if index_filename:
             for key, value in dict_of_reactions.items():
                 del value['cross section']
                 del value['energy']
-            
+
             index_dict.update(dict_of_reactions)
-            
+
             # output_filename = Path(filename).stem
             # output_filename = Path(output_filename).with_suffix('.json')
             # output_filename = Path(output_dir)/output_filename
 
     if index_filename:
         with open(Path(output_dir)/index_filename, 'w') as fout:
-            json.dump(index_dict, fout, indent = 2)
+            json.dump(index_dict, fout, indent=2)
         output_filenames.append(str(index_filename))
 
     return output_filenames
@@ -266,6 +267,9 @@ def cross_section_h5_file_to_json_files(
         library=library,
         reaction=reaction
     )
+
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+
     output_filenames = []
     for key, value in dict_of_reactions.items():
         output_filename = Path(output_dir)/Path(key+'.json')
