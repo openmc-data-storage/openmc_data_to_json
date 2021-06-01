@@ -27,7 +27,7 @@ jobs:
         # from refs/tags/v1.2.3 get 1.2.3
         VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
         PLACEHOLDER='__version__ = "develop"'
-        VERSION_FILE='pyjokes/__init__.py'
+        VERSION_FILE='/openmc_data_to_json/__init__.py'
         # ensure the placeholder is there. If grep doesn't find the placeholder
         # it exits with exit code 1 and github actions aborts the build. 
         grep "$PLACEHOLDER" "$VERSION_FILE"
@@ -41,8 +41,8 @@ jobs:
 
     - name: Build and publish
       env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
       run: |
         python setup.py sdist bdist_wheel
         twine upload dist/*
