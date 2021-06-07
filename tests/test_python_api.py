@@ -30,8 +30,8 @@ class TestApiUsage(unittest.TestCase):
             reaction='(n,Xt)'
         )
 
-        energy = dict_of_reactions['Li_6__n_205_294K']['energy']
-        xs = dict_of_reactions['Li_6__n_205_294K']['cross section']
+        energy = dict_of_reactions[0]['energy']
+        xs = dict_of_reactions[0]['cross section']
 
         assert len(energy) == len(xs)
 
