@@ -222,7 +222,7 @@ def cross_section_h5_files_to_json_files(
                 del entry['energy']
                 del entry['uuid']
 
-            index_dict.append(dict_of_reactions)
+            index_dict = index_dict + dict_of_reactions
 
             # output_filename = Path(filename).stem
             # output_filename = Path(output_filename).with_suffix('.json')
