@@ -2,6 +2,7 @@
 import os
 import unittest
 from pathlib import Path
+import pytest
 
 
 class TestUsage(unittest.TestCase):
@@ -32,11 +33,13 @@ class TestUsage(unittest.TestCase):
 
     def test_extraction_of_missing_cross_section(self):
 
-        os.system('rm *.json')
+        # should raise ValueError as reaction does not exist
+
+        os.system('rm my_reaction.json')
 
         os.system("openmc-data-to-json -i tests/Be9.h5 -r n,f -o my_reaction.json")
 
-        assert Path('my_reaction.json').exists is False
+        assert Path('my_reaction.json').exists() is False
 
 
 if __name__ == "__main__":

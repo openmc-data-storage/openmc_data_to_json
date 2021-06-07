@@ -184,6 +184,7 @@ def find_REACTION_MT(val, incident_particle_symbol='n'):
             return key
     raise ValueError('val not found', val)
 
+
 def find_REACTION_NAME(keynumber, incident_particle_symbol='n'):
 
     REACTION_NAME = make_REACTION_DICT(incident_particle_symbol)
@@ -274,16 +275,16 @@ def cross_section_h5_file_to_json_files(
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     output_filenames = []
-    for key, value in dict_of_reactions.items():
-        output_filename = Path(output_dir)/Path(key+'.json')
+    for entry in dict_of_reactions:
+        output_filename = Path(output_dir)/Path(entry['uuid']+'.json')
         with open(output_filename, 'w') as fout:
-            json.dump(value, fout, indent = 2)
+            json.dump(entry, fout, indent=2)
         output_filenames.append(str(output_filename))
 
     if index_filename:
-        for key, value in dict_of_reactions.items():
-            del value['cross section']
-            del value['energy']
+        for entry in dict_of_reactions:
+            del entry['cross section']
+            del entry['energy']
         
         # output_filename = Path(filename).stem
         # output_filename = Path(output_filename).with_suffix('.json')
@@ -318,6 +319,7 @@ def cross_section_h5_to_json(
     library='',
     reaction='all',
 ) -> dict:
+
     dict_of_reactions = []#{}
     isotope_object, particle = open_h5(filename)
     incident_particle_symbol = particle[0]
