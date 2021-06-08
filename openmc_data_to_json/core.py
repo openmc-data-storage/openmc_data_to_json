@@ -364,32 +364,32 @@ def cross_section_h5_to_json(
 
                 # print('creating json object for ',isotope_object.name, 'MT',reaction, temperature)
 
-                # json_obj = {
-                #     'Proton number':int(isotope_object._atomic_number),
-                #     'Mass number':mass_number,
-                #     'Neutron number':neutron_number,
-                #     'Element':ELEMENT_NAME[int(isotope_object._atomic_number)],
-                #     'Atomic symbol':isotope_object.atomic_symbol,
-                #     'Temperature':temperature,
-                #     'Incident particle':'neutron',
-                #     'Reaction products':REACTION_NAME[int(reaction)],
-                #     'MT reaction number':int(reaction), # mt number
-                #     'Library':library,
-                #     'cross section':shorter_cross_section.tolist(),
-                #     'energy':shorter_energy.tolist(),
-                # }
-
                 reaction_dict = {
-                    'Proton number / element':str(int(isotope_object._atomic_number)) +' '+isotope_object.atomic_symbol + ' '  + ELEMENT_NAME[int(isotope_object._atomic_number)],
+                    'Proton number':int(isotope_object._atomic_number),
                     'Mass number':mass_number,
                     'Neutron number':neutron_number,
-                    'MT number / reaction products':str(int(reaction)) + ' ' +find_REACTION_NAME(reaction, incident_particle_symbol),
+                    'Element':ELEMENT_NAME[int(isotope_object._atomic_number)],
+                    'Atomic symbol':isotope_object.atomic_symbol,
+                    'Temperature':temperature,
+                    'Incident particle':'neutron',
+                    'Reaction products':REACTION_NAME[int(reaction)],
+                    'MT reaction number':int(reaction), # mt number
                     'Library':library,
-                    # 'Temperature':temperature,
                     'cross section':shorter_cross_section.tolist(),
                     'energy':shorter_energy.tolist(),
-                    'uuid':'_'.join([isotope_object.atomic_symbol, str(mass_number), library, incident_particle_symbol, str(int(reaction)), str(temperature)])
                 }
+
+                # reaction_dict = {
+                #     'Proton number / element':str(int(isotope_object._atomic_number)) +' '+isotope_object.atomic_symbol + ' '  + ELEMENT_NAME[int(isotope_object._atomic_number)],
+                #     'Mass number':mass_number,
+                #     'Neutron number':neutron_number,
+                #     'MT number / reaction products':str(int(reaction)) + ' ' +find_REACTION_NAME(reaction, incident_particle_symbol),
+                #     'Library':library,
+                #     # 'Temperature':temperature,
+                #     'cross section':shorter_cross_section.tolist(),
+                #     'energy':shorter_energy.tolist(),
+                #     'uuid':'_'.join([isotope_object.atomic_symbol, str(mass_number), library, incident_particle_symbol, str(int(reaction)), str(temperature)])
+                # }
 
                 # dict_of_reactions[uuid] = reaction_dict
                 dict_of_reactions.append(reaction_dict)

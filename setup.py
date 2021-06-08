@@ -26,6 +26,7 @@ setuptools.setup(
         # ]
     },
     install_requires=[
+        "h5py"
     ],
     tests_require=["pytest-cov"],
 )
