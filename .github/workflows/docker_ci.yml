@@ -1,0 +1,16 @@
+  
+
+name: CI - Main
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build and test with Docker
+      run: |
+        docker pull openmc/openmc:latest
+        docker run --rm openmc/openmc:latest /bin/bash -c "pytest tests"
