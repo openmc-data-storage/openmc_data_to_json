@@ -12,5 +12,5 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build and test with Docker
       run: |
-        docker pull openmc/openmc:latest
-        docker run --rm openmc/openmc:latest /bin/bash -c "pytest tests"
+        docker build -t openmc_data_to_json .
+        docker run --rm openmc_data_to_json /bin/bash -c "pytest tests"
