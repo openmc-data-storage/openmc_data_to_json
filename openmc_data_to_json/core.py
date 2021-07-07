@@ -377,6 +377,7 @@ def cross_section_h5_to_json(
                     'Library':library,
                     'cross section':shorter_cross_section.tolist(),
                     'energy':shorter_energy.tolist(),
+                    'uuid':'_'.join([isotope_object.atomic_symbol, str(mass_number), library, incident_particle_symbol, str(int(reaction)), str(temperature)])
                 }
 
                 # reaction_dict = {
