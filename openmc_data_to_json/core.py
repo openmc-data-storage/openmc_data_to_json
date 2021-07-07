@@ -372,7 +372,7 @@ def cross_section_h5_to_json(
                     'Atomic symbol':isotope_object.atomic_symbol,
                     'Temperature':temperature,
                     'Incident particle':'neutron',
-                    'Reaction products':REACTION_NAME[int(reaction)],
+                    'Reaction products':find_REACTION_NAME(int(reaction)),
                     'MT reaction number':int(reaction), # mt number
                     'Library':library,
                     'cross section':shorter_cross_section.tolist(),
