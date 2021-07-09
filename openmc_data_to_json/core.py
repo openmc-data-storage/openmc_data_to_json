@@ -368,9 +368,9 @@ def cross_section_h5_to_json(
                     'Proton number':int(isotope_object._atomic_number),
                     'Mass number':mass_number,
                     'Neutron number':neutron_number,
-                    'Element':ELEMENT_NAME[int(isotope_object._atomic_number)],
+                    'Element':ELEMENT_NAME[int(isotope_object._atomic_number)].lower(),
                     'Atomic symbol':isotope_object.atomic_symbol,
-                    'Temperature(K)':temperature,
+                    'Temperature(K)':temperature.replace('K', ''),
                     'Incident particle':'neutron',
                     'Reaction products':find_REACTION_NAME(int(reaction)),
                     'MT reaction number':int(reaction), # mt number
