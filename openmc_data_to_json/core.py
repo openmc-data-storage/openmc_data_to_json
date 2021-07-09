@@ -51,143 +51,146 @@ ELEMENT_NAME = {
 
 # for reaction in REACTION_NAME: 
 #     REACTION_NAME[reaction] = REACTION_NAME[reaction][3:-1]
-def make_REACTION_DICT(incident_particle_symbol='n'):
+def make_REACTION_DICT():
 
     REACTION_NAME = {
-        1: '('+incident_particle_symbol+',total)', 
-        2: '('+incident_particle_symbol+',elastic)', 
-        4: '('+incident_particle_symbol+',level)',
-        5: '('+incident_particle_symbol+',misc)', 
-        11: '('+incident_particle_symbol+',2nd)', 
-        16: '('+incident_particle_symbol+',2n)', 
-        17: '('+incident_particle_symbol+',3n)',
-        18: '('+incident_particle_symbol+',fission)', 
-        19: '('+incident_particle_symbol+',f)', 
-        20: '('+incident_particle_symbol+',nf)', 
-        21: '('+incident_particle_symbol+',2nf)',
-        22: '('+incident_particle_symbol+',na)', 
-        23: '('+incident_particle_symbol+',n3a)', 
-        24: '('+incident_particle_symbol+',2na)', 
-        25: '('+incident_particle_symbol+',3na)',
-        27: '('+incident_particle_symbol+',absorption)', 
-        28: '('+incident_particle_symbol+',np)', 
-        29: '('+incident_particle_symbol+',n2a)',
-        30: '('+incident_particle_symbol+',2n2a)', 
-        32: '('+incident_particle_symbol+',nd)', 
-        33: '('+incident_particle_symbol+',nt)', 
-        34: '('+incident_particle_symbol+',nHe-3)',
-        35: '('+incident_particle_symbol+',nd2a)', 
-        36: '('+incident_particle_symbol+',nt2a)', 
-        37: '('+incident_particle_symbol+',4n)', 
-        38: '('+incident_particle_symbol+',3nf)',
-        41: '('+incident_particle_symbol+',2np)', 
-        42: '('+incident_particle_symbol+',3np)', 
-        44: '('+incident_particle_symbol+',n2p)', 
-        45: '('+incident_particle_symbol+',npa)',
-        91: '('+incident_particle_symbol+',nc)', 
-        101: '('+incident_particle_symbol+',disappear)', 
-        102: '('+incident_particle_symbol+',gamma)',
-        103: '('+incident_particle_symbol+',p)', 
-        104: '('+incident_particle_symbol+',d)', 
-        105: '('+incident_particle_symbol+',t)', 
-        106: '('+incident_particle_symbol+',3He)',
-        107: '('+incident_particle_symbol+',a)', 
-        108: '('+incident_particle_symbol+',2a)', 
-        109: '('+incident_particle_symbol+',3a)', 
-        111: '('+incident_particle_symbol+',2p)',
-        112: '('+incident_particle_symbol+',pa)', 
-        113: '('+incident_particle_symbol+',t2a)', 
-        114: '('+incident_particle_symbol+',d2a)', 
-        115: '('+incident_particle_symbol+',pd)',
-        116: '('+incident_particle_symbol+',pt)', 
-        117: '('+incident_particle_symbol+',da)', 
-        152: '('+incident_particle_symbol+',5n)', 
-        153: '('+incident_particle_symbol+',6n)',
-        154: '('+incident_particle_symbol+',2nt)', 
-        155: '('+incident_particle_symbol+',ta)', 
-        156: '('+incident_particle_symbol+',4np)', 
-        157: '('+incident_particle_symbol+',3nd)',
-        158: '('+incident_particle_symbol+',nda)', 
-        159: '('+incident_particle_symbol+',2npa)', 
-        160: '('+incident_particle_symbol+',7n)', 
-        161: '('+incident_particle_symbol+',8n)',
-        162: '('+incident_particle_symbol+',5np)', 
-        163: '('+incident_particle_symbol+',6np)', 
-        164: '('+incident_particle_symbol+',7np)', 
-        165: '('+incident_particle_symbol+',4na)',
-        166: '('+incident_particle_symbol+',5na)', 
-        167: '('+incident_particle_symbol+',6na)', 
-        168: '('+incident_particle_symbol+',7na)', 
-        169: '('+incident_particle_symbol+',4nd)',
-        170: '('+incident_particle_symbol+',5nd)', 
-        171: '('+incident_particle_symbol+',6nd)', 
-        172: '('+incident_particle_symbol+',3nt)', 
-        173: '('+incident_particle_symbol+',4nt)',
-        174: '('+incident_particle_symbol+',5nt)', 
-        175: '('+incident_particle_symbol+',6nt)', 
-        176: '('+incident_particle_symbol+',2n3He)',
-        177: '('+incident_particle_symbol+',3n3He)', 
-        178: '('+incident_particle_symbol+',4n3He)', 
-        179: '('+incident_particle_symbol+',3n2p)',
-        180: '('+incident_particle_symbol+',3n3a)', 
-        181: '('+incident_particle_symbol+',3npa)', 
-        182: '('+incident_particle_symbol+',dt)',
-        183: '('+incident_particle_symbol+',npd)', 
-        184: '('+incident_particle_symbol+',npt)', 
-        185: '('+incident_particle_symbol+',ndt)',
-        186: '('+incident_particle_symbol+',np3He)', 
-        187: '('+incident_particle_symbol+',nd3He)', 
-        188: '('+incident_particle_symbol+',nt3He)',
-        189: '('+incident_particle_symbol+',nta)', 
-        190: '('+incident_particle_symbol+',2n2p)', 
-        191: '('+incident_particle_symbol+',p3He)',
-        192: '('+incident_particle_symbol+',d3He)', 
-        193: '('+incident_particle_symbol+',3Hea)', 
-        194: '('+incident_particle_symbol+',4n2p)',
-        195: '('+incident_particle_symbol+',4n2a)', 
-        196: '('+incident_particle_symbol+',4npa)', 
-        197: '('+incident_particle_symbol+',3p)',
-        198: '('+incident_particle_symbol+',n3p)', 
-        199: '('+incident_particle_symbol+',3n2pa)', 
-        200: '('+incident_particle_symbol+',5n2p)', 
-        444: '('+incident_particle_symbol+',damage)',
-        649: '('+incident_particle_symbol+',pc)', 
-        699: '('+incident_particle_symbol+',dc)', 
-        749: '('+incident_particle_symbol+',tc)', 
-        799: '('+incident_particle_symbol+',3Hec)',
-        849: '('+incident_particle_symbol+',ac)', 
-        891: '('+incident_particle_symbol+',2nc)'}
+        1: 'total', 
+        2: 'elastic', 
+        4: 'level',
+        5: 'misc', 
+        11: '2nd', 
+        16: '2n', 
+        17: '3n',
+        18: 'fission', 
+        19: 'f', 
+        20: 'nf', 
+        21: '2nf',
+        22: 'na', 
+        23: 'n3a', 
+        24: '2na', 
+        25: '3na',
+        27: 'absorption', 
+        28: 'np', 
+        29: 'n2a',
+        30: '2n2a', 
+        32: 'nd', 
+        33: 'nt', 
+        34: 'nHe-3',
+        35: 'nd2a', 
+        36: 'nt2a', 
+        37: '4n', 
+        38: '3nf',
+        41: '2np', 
+        42: '3np', 
+        44: 'n2p', 
+        45: 'npa',
+        91: 'nc', 
+        101: 'disappear', 
+        102: 'gamma',
+        103: 'p', 
+        104: 'd', 
+        105: 't', 
+        106: '3He',
+        107: 'a', 
+        108: '2a', 
+        109: '3a', 
+        111: '2p',
+        112: 'pa', 
+        113: 't2a', 
+        114: 'd2a', 
+        115: 'pd',
+        116: 'pt', 
+        117: 'da', 
+        152: '5n', 
+        153: '6n',
+        154: '2nt', 
+        155: 'ta', 
+        156: '4np', 
+        157: '3nd',
+        158: 'nda', 
+        159: '2npa', 
+        160: '7n', 
+        161: '8n',
+        162: '5np', 
+        163: '6np', 
+        164: '7np', 
+        165: '4na',
+        166: '5na', 
+        167: '6na', 
+        168: '7na', 
+        169: '4nd',
+        170: '5nd', 
+        171: '6nd', 
+        172: '3nt', 
+        173: '4nt',
+        174: '5nt', 
+        175: '6nt', 
+        176: '2n3He',
+        177: '3n3He', 
+        178: '4n3He', 
+        179: '3n2p',
+        180: '3n3a', 
+        181: '3npa', 
+        182: 'dt',
+        183: 'npd', 
+        184: 'npt', 
+        185: 'ndt',
+        186: 'np3He', 
+        187: 'nd3He', 
+        188: 'nt3He',
+        189: 'nta', 
+        190: '2n2p', 
+        191: 'p3He',
+        192: 'd3He', 
+        193: '3Hea', 
+        194: '4n2p',
+        195: '4n2a', 
+        196: '4npa', 
+        197: '3p',
+        198: 'n3p', 
+        199: '3n2pa', 
+        200: '5n2p', 
+        444: 'damage',
+        649: 'pc', 
+        699: 'dc', 
+        749: 'tc', 
+        799: '3Hec',
+        849: 'ac', 
+        891: '2nc'}
 
-    REACTION_NAME.update({i: '('+incident_particle_symbol+',n{})'.format(i - 50) for i in range(50, 91)})
-    REACTION_NAME.update({i: '('+incident_particle_symbol+',p{})'.format(i - 600) for i in range(600, 649)})
-    REACTION_NAME.update({i: '('+incident_particle_symbol+',d{})'.format(i - 650) for i in range(650, 699)})
-    REACTION_NAME.update({i: '('+incident_particle_symbol+',t{})'.format(i - 700) for i in range(700, 749)})
-    REACTION_NAME.update({i: '('+incident_particle_symbol+',3He{})'.format(i - 750) for i in range(750, 799)})
-    REACTION_NAME.update({i: '('+incident_particle_symbol+',a{})'.format(i - 800) for i in range(800, 849)})
-    REACTION_NAME.update({i: '('+incident_particle_symbol+',2n{})'.format(i - 875) for i in range(875, 891)})
+    REACTION_NAME.update({i: 'n{}'.format(i - 50) for i in range(50, 91)})
+    REACTION_NAME.update({i: 'p{}'.format(i - 600) for i in range(600, 649)})
+    REACTION_NAME.update({i: 'd{}'.format(i - 650) for i in range(650, 699)})
+    REACTION_NAME.update({i: 't{}'.format(i - 700) for i in range(700, 749)})
+    REACTION_NAME.update({i: '3He{}'.format(i - 750) for i in range(750, 799)})
+    REACTION_NAME.update({i: 'a{}'.format(i - 800) for i in range(800, 849)})
+    REACTION_NAME.update({i: '2n{}'.format(i - 875) for i in range(875, 891)})
 
-    REACTION_NAME[3] = '('+incident_particle_symbol+',nonelastic)'
-    REACTION_NAME[203] = '('+incident_particle_symbol+',Xp)'
-    REACTION_NAME[204] = '('+incident_particle_symbol+',Xd)'
-    REACTION_NAME[205] = '('+incident_particle_symbol+',Xt)'
-    REACTION_NAME[206] = '('+incident_particle_symbol+',3He)'
-    REACTION_NAME[207] = '('+incident_particle_symbol+',Xa)'
-    REACTION_NAME[301] = '('+incident_particle_symbol+',heat)'
-    REACTION_NAME[901] = '('+incident_particle_symbol+',displacement NRT)'
+    REACTION_NAME[3] = 'nonelastic'
+    REACTION_NAME[203] = 'Xp'
+    REACTION_NAME[204] = 'Xd'
+    REACTION_NAME[205] = 'Xt'
+    REACTION_NAME[206] = '3He'
+    REACTION_NAME[207] = 'Xa'
+    REACTION_NAME[301] = 'heat'
+    REACTION_NAME[901] = 'displacement NRT'
 
     return REACTION_NAME
 
 
-def find_REACTION_MT(val, incident_particle_symbol='n'):
-    for key, value in make_REACTION_DICT(incident_particle_symbol).items():
-        if val == value or val == value.strip('(').strip(')'):
+def find_REACTION_MT(val):
+    for key, value in make_REACTION_DICT().items():
+        if val == value or val.strip('(n,').strip(')') == value:
             return key
-    raise ValueError('val not found', val)
+    raise ValueError(val, 'val not found in', make_REACTION_DICT().values())
 
 
 def find_REACTION_NAME(keynumber, incident_particle_symbol='n'):
 
-    REACTION_NAME = make_REACTION_DICT(incident_particle_symbol)
+    REACTION_NAME = make_REACTION_DICT()
+
+    for key, value in REACTION_NAME.items():
+        REACTION_NAME[key] = '({},{})'.format(incident_particle_symbol, value)
 
     return REACTION_NAME[keynumber]
 
@@ -328,6 +331,7 @@ def cross_section_h5_to_json(
         reactions = []
         for key, value in isotope_object.reactions.items():
             reactions.append(key)
+        reactions.append('total')
     elif isinstance(reaction, (str, int)):
         reactions = [reaction]
     else:
@@ -344,8 +348,8 @@ def cross_section_h5_to_json(
     
     for reaction in reaction_mt_numbers:
 
-        if reaction not in isotope_object.reactions:
-            raise ValueError('reaction not in avalaible reactions')
+        if reaction not in [1] and reaction not in isotope_object.reactions:
+            raise ValueError(reaction, ' not in avalaible reactions')
         temperatures = isotope_object[reaction].xs.keys()
         for temperature in temperatures:
             energy = isotope_object.energy[temperature]
@@ -368,9 +372,9 @@ def cross_section_h5_to_json(
                     'Proton number':int(isotope_object._atomic_number),
                     'Mass number':mass_number,
                     'Neutron number':neutron_number,
-                    'Element':ELEMENT_NAME[int(isotope_object._atomic_number)],
+                    'Element':ELEMENT_NAME[int(isotope_object._atomic_number)].lower(),
                     'Atomic symbol':isotope_object.atomic_symbol,
-                    'Temperature':temperature,
+                    'Temperature(K)':temperature.replace('K', ''),
                     'Incident particle':'neutron',
                     'Reaction products':find_REACTION_NAME(int(reaction)),
                     'MT reaction number':int(reaction), # mt number
