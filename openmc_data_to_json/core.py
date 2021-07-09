@@ -182,7 +182,7 @@ def find_REACTION_MT(val):
     for key, value in make_REACTION_DICT().items():
         if val == value or val.strip('(n,').strip(')') == value:
             return key
-    raise ValueError(val, 'val not found in', make_REACTION_DICT().items())
+    raise ValueError(val, 'val not found in', make_REACTION_DICT().values())
 
 
 def find_REACTION_NAME(keynumber, incident_particle_symbol='n'):
@@ -191,8 +191,6 @@ def find_REACTION_NAME(keynumber, incident_particle_symbol='n'):
 
     for key, value in REACTION_NAME.items():
         REACTION_NAME[key] = '({},{})'.format(incident_particle_symbol, value)
-
-    print(REACTION_NAME)
 
     return REACTION_NAME[keynumber]
 
@@ -350,8 +348,8 @@ def cross_section_h5_to_json(
     
     for reaction in reaction_mt_numbers:
 
-        if reaction not in isotope_object.reactions:
-            raise ValueError('reaction not in avalaible reactions')
+        if reaction not in [1] and reaction not in isotope_object.reactions:
+            raise ValueError(reaction, ' not in avalaible reactions')
         temperatures = isotope_object[reaction].xs.keys()
         for temperature in temperatures:
             energy = isotope_object.energy[temperature]
