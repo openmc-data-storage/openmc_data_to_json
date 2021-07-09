@@ -51,7 +51,7 @@ ELEMENT_NAME = {
 
 # for reaction in REACTION_NAME: 
 #     REACTION_NAME[reaction] = REACTION_NAME[reaction][3:-1]
-def make_REACTION_DICT(incident_particle_symbol='n'):
+def make_REACTION_DICT():
 
     REACTION_NAME = {
         1: 'total', 
@@ -178,16 +178,21 @@ def make_REACTION_DICT(incident_particle_symbol='n'):
     return REACTION_NAME
 
 
-def find_REACTION_MT(val, incident_particle_symbol='n'):
-    for key, value in make_REACTION_DICT(incident_particle_symbol).items():
-        if val == value or val == value.strip('(').strip(')'):
+def find_REACTION_MT(val):
+    for key, value in make_REACTION_DICT().items():
+        if val == value or val.strip('(n,').strip(')') == value:
             return key
-    raise ValueError('val not found', val)
+    raise ValueError(val, 'val not found in', make_REACTION_DICT().items())
 
 
 def find_REACTION_NAME(keynumber, incident_particle_symbol='n'):
 
-    REACTION_NAME = make_REACTION_DICT(incident_particle_symbol)
+    REACTION_NAME = make_REACTION_DICT()
+
+    for key, value in REACTION_NAME.items():
+        REACTION_NAME[key] = '({},{})'.format(incident_particle_symbol, value)
+
+    print(REACTION_NAME)
 
     return REACTION_NAME[keynumber]
 
@@ -328,6 +333,7 @@ def cross_section_h5_to_json(
         reactions = []
         for key, value in isotope_object.reactions.items():
             reactions.append(key)
+        reactions.append('total')
     elif isinstance(reaction, (str, int)):
         reactions = [reaction]
     else:
