@@ -195,6 +195,11 @@ def find_REACTION_NAME(keynumber, incident_particle_symbol='n'):
     return REACTION_NAME[keynumber]
 
 
+def find_REACTION_products(keynumber):
+
+    return make_REACTION_DICT()[keynumber]
+
+
 def cross_section_h5_files_to_json_files(
     filenames: List[str],
     output_dir: str = '',
@@ -376,7 +381,7 @@ def cross_section_h5_to_json(
                     'Atomic symbol':isotope_object.atomic_symbol,
                     'Temperature(K)':temperature.replace('K', ''),
                     'Incident particle':'neutron',
-                    'Reaction products':find_REACTION_NAME(int(reaction)),
+                    'Reaction products':find_REACTION_products(int(reaction)),
                     'MT reaction number':int(reaction), # mt number
                     'Library':library,
                     'cross section':shorter_cross_section.tolist(),
