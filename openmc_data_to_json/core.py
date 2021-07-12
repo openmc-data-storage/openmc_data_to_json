@@ -360,7 +360,7 @@ def cross_section_h5_to_json(
             energy = isotope_object.energy[temperature]
             cross_section = isotope_object[reaction].xs[temperature](energy)
 
-            shorter_cross_section = np.trim_zeros(cross_section, 'f')
+            shorter_cross_section = np.trim_zeros(cross_section, 'b')
 
             ofset = len(cross_section) - len(shorter_cross_section)
 
