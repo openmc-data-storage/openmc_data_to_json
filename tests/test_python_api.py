@@ -23,22 +23,38 @@ class TestApiUsage(unittest.TestCase):
 
         assert Path('tritium_production.json').exists
 
+
+    def test_for_trailing_zeros(self):
+
+
+        list_of_reactions = cross_section_h5_to_json(
+                filename='tests/FENDL-3.1d_Ag109.h5',
+                reaction='all'
+            )
+        for entry in list_of_reactions: 
+            xs = entry['cross section']
+            print(xs)
+            assert xs[-1] != 0
+
     def test_cross_section_h5_to_json(self):
 
-        dict_of_reactions = cross_section_h5_to_json(
-            filename='tests/Li6.h5',
-            reaction='(n,Xt)'
-        )
 
-        energy = dict_of_reactions[0]['energy']
-        xs = dict_of_reactions[0]['cross section']
+        for isotope, reaction in zip(['Be9.h5', 'Li6.h5', 'Li7.h5'], ['(n,Xt)', '(n,Xt)', '(n,Xt)']):
+            dict_of_reactions = cross_section_h5_to_json(
+                filename='tests/'+isotope,
+                reaction=reaction
+            )
 
-        assert len(energy) == len(xs)
+            energy = dict_of_reactions[0]['energy']
+            xs = dict_of_reactions[0]['cross section']
 
-        for entry in energy:
-            assert isinstance(entry, float)
-        for entry in xs:
-            assert isinstance(entry, float)
+            assert len(energy) == len(xs)
+
+            for entry in energy:
+                assert isinstance(entry, float)
+            for entry in xs:
+                assert isinstance(entry, float)
+            assert xs[-1] != 0
 
     def test_reactions_in_h5(self):
 
