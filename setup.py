@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="openmc_data_to_json",
-    version="0.0.14",
+    version="0.0.15",
     author="Jonathan Shimwell",
     description="A tool for selectively extracting cross sections from OpenMC h5 files.",
     long_description=long_description,
