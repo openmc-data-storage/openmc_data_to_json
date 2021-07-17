@@ -3,6 +3,9 @@
 # to the main branch occures. For more information see:
 # https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
 
+# Makes use of code from the CI Python versioner
+# https://github.com/grst/python-ci-versioneer/blob/master/.github/workflows/python-publish.yml
+
 name: Upload Python Package
 
 on:
