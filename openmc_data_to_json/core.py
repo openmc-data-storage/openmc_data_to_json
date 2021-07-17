@@ -452,10 +452,7 @@ def cross_section_h5_to_json(
             energy = isotope_object.energy[temperature]
             cross_section = isotope_object[reaction].xs[temperature](energy)
 
-            (
-                shorter_energy,
-                shorter_cross_section,
-            ) = trim_zeros_from_front_and_back_of_list(cross_section, energy)
+            shorter_cross_section, shorter_energy = trim_zeros_from_front_and_back_of_list(cross_section, energy)
 
             if (
                 int(isotope_object._mass_number) != 0
