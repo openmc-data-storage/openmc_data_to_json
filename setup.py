@@ -34,3 +34,6 @@ def main():
         ],
         tests_require=["pytest-cov"],
     )
+
+if __name__ == '__main__':
+    main()
