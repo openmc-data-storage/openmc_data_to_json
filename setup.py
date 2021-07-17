@@ -17,7 +17,7 @@ def main():
         url="https://github.com/openmc_data_storage/openmc_data_to_json",
         packages=find_packages(),
         zip_safe=True,
-        package_dir=find_packages(),
+        package_dir={"openmc_data_to_json": "openmc_data_to_json"},
         scripts=['openmc_data_to_json/openmc-data-to-json'],
         package_data={
             "openmc_data_to_json": [
