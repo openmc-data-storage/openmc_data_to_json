@@ -9,6 +9,7 @@ def main():
         name="openmc_data_to_json",
         version="develop",
         author="Jonathan Shimwell",
+        author_email="mail@jshimwell.com",
         description="A tool for selectively extracting cross sections from OpenMC h5 files.",
         long_description=long_description,
         long_description_content_type="text/markdown",
