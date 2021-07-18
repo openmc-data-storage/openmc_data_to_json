@@ -4,12 +4,10 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 def main():
-    "Executes setup when this script is the top-level"
-    import openmc_data_to_json as app
 
     setup(
         name="openmc_data_to_json",
-        version=app.__version__,
+        version="develop",
         author="Jonathan Shimwell",
         description="A tool for selectively extracting cross sections from OpenMC h5 files.",
         long_description=long_description,
@@ -34,6 +32,7 @@ def main():
         ],
         tests_require=["pytest-cov"],
     )
+
 
 if __name__ == '__main__':
     main()

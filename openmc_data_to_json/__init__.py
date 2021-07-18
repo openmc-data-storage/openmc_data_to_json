@@ -9,5 +9,3 @@ from .core import (
     reactions_in_h5,
     trim_zeros_from_front_and_back_of_list,
 )
-
-__version__ = "develop"
