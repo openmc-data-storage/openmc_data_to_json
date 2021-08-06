@@ -5,7 +5,7 @@ from pathlib import Path
 import h5py
 import numpy as np
 import openmc
-from typing import Optional, List
+from typing import Optional, List, Union
 
 ELEMENT_NAME = {
     0: "neutron",
@@ -287,6 +287,7 @@ def cross_section_h5_files_to_json_files(
     library: str = "",
     reaction: str = "all",
     index_filename: str = None,
+    indent: Union[int, None] = 2
 ):
     output_filenames = []
     index_dict = []
@@ -299,7 +300,7 @@ def cross_section_h5_files_to_json_files(
         for entry in dict_of_reactions:
             output_filename = Path(output_dir) / Path(entry["uuid"] + ".json")
             with open(output_filename, "w") as fout:
-                json.dump(entry, fout, indent=2)
+                json.dump(entry, fout, indent=indent)
             output_filenames.append(str(output_filename))
 
         if index_filename:
@@ -317,14 +318,18 @@ def cross_section_h5_files_to_json_files(
 
     if index_filename:
         with open(Path(output_dir) / index_filename, "w") as fout:
-            json.dump(index_dict, fout, indent=2)
+            json.dump(index_dict, fout, indent=indent)
         output_filenames.append(str(index_filename))
 
     return output_filenames
 
 
 def cross_section_h5_files_to_json_file(
-    filenames, output="my_reactions.json", reaction="all", library=""
+    filenames,
+    output="my_reactions.json",
+    reaction="all",
+    library="",
+    indent: Union[int, None] = 2
 ):
 
     list_of_reactions = []
@@ -335,7 +340,7 @@ def cross_section_h5_files_to_json_file(
         list_of_reactions.append(dict_of_reactions)
 
     with open(output, "w") as fout:
-        json.dump(list_of_reactions, fout, indent=2)
+        json.dump(list_of_reactions, fout, indent=indent)
 
     return output
 
@@ -346,6 +351,7 @@ def cross_section_h5_file_to_json_files(
     library: str = "",
     index_filename: str = None,
     reaction="all",
+    indent: Union[int, None] = 2
 ):
 
     dict_of_reactions = cross_section_h5_to_json(
@@ -358,7 +364,7 @@ def cross_section_h5_file_to_json_files(
     for entry in dict_of_reactions:
         output_filename = Path(output_dir) / Path(entry["uuid"] + ".json")
         with open(output_filename, "w") as fout:
-            json.dump(entry, fout, indent=2)
+            json.dump(entry, fout, indent=indent)
         output_filenames.append(str(output_filename))
 
     if index_filename:
@@ -371,21 +377,25 @@ def cross_section_h5_file_to_json_files(
         # output_filename = Path(output_dir)/output_filename
 
         with open(Path(output_dir) / index_filename, "w") as fout:
-            json.dump(dict_of_reactions, fout, indent=2)
+            json.dump(dict_of_reactions, fout, indent=indent)
         output_filenames.append(str(index_filename))
 
     return output_filenames
 
 
 def cross_section_h5_file_to_json_file(
-    filename, output="my_reactions.json", reaction="all", library=""
+    filename,
+    output="my_reactions.json",
+    reaction="all",
+    library="",
+    indent: Union[int, None] = 2
 ):
     dict_of_reactions = cross_section_h5_to_json(
         filename=filename, library=library, reaction=reaction
     )
 
     with open(output, "w") as fout:
-        json.dump(dict_of_reactions, fout, indent=2)
+        json.dump(dict_of_reactions, fout, indent=indent)
 
     return output
 

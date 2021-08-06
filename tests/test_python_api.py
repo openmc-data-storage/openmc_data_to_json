@@ -48,7 +48,9 @@ class TestApiUsage(unittest.TestCase):
         os.system("rm *.json")
 
         cross_section_h5_file_to_json_file(
-            filename="tests/Li6.h5", output="tritium_production.json", reaction="(n,Xt)"
+            filename="tests/Li6.h5",
+            output="tritium_production.json",
+            reaction="(n,Xt)"
         )
 
         assert Path("tritium_production.json").exists
@@ -62,6 +64,24 @@ class TestApiUsage(unittest.TestCase):
             xs = entry["cross section"]
             print(xs)
             assert xs[-1] != 0
+
+    def test_for_indent_file_size_reduction(self):
+
+        cross_section_h5_file_to_json_file(
+            filename="tests/FENDL-3.1d_Ag109.h5",
+            reaction='total',
+            output="indented_reactions.json",
+            indent = 2,
+            library="FENDL",
+        )
+        cross_section_h5_file_to_json_file(
+            filename="tests/FENDL-3.1d_Ag109.h5",
+            reaction='total',
+            output="unindented_reactions.json",
+            indent = None,
+            library="FENDL",
+        )
+        assert Path('indented_reactions.json').stat().st_size > Path('unindented_reactions.json').stat().st_size
 
     def test_cross_section_h5_to_json(self):
 
