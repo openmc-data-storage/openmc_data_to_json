@@ -29,7 +29,9 @@ def main():
             # ]
         },
         install_requires=[
-            "h5py"
+            "h5py",
+            "feather-format",
+            "pandas",
         ],
         tests_require=["pytest-cov"],
     )

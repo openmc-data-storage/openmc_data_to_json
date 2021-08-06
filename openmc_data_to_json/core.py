@@ -1,11 +1,13 @@
 import json
 from pathlib import Path
-
+from typing import List, Optional
 
 import h5py
 import numpy as np
 import openmc
-from typing import Optional, List
+import pandas as pd
+import pyarrow.feather as feather
+
 
 ELEMENT_NAME = {
     0: "neutron",
@@ -280,14 +282,15 @@ def find_REACTION_products(keynumber):
 
     return make_REACTION_DICT()[keynumber]
 
-
-def cross_section_h5_files_to_json_files(
+def cross_section_h5_files_to_feather_files(
     filenames: List[str],
     output_dir: str = "",
     library: str = "",
     reaction: str = "all",
     index_filename: str = None,
+    compression: str = 'lz4'
 ):
+    """compression: 'lz4', 'zstd', 'uncompressed'"""
     output_filenames = []
     index_dict = []
     Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -298,8 +301,8 @@ def cross_section_h5_files_to_json_files(
         # for key, value in dict_of_reactions.items():
         for entry in dict_of_reactions:
             output_filename = Path(output_dir) / Path(entry["uuid"] + ".json")
-            with open(output_filename, "w") as fout:
-                json.dump(entry, fout, indent=2)
+            df = pd.DataFrame(entry)
+            feather.write_feather(df, output_filename, compression=compression)
             output_filenames.append(str(output_filename))
 
         if index_filename:
@@ -323,8 +326,53 @@ def cross_section_h5_files_to_json_files(
     return output_filenames
 
 
+def cross_section_h5_files_to_json_files(
+    filenames: List[str],
+    output_dir: str = "",
+    library: str = "",
+    reaction: str = "all",
+    index_filename: str = None,
+    indent: int = 2,
+):
+    output_filenames = []
+    index_dict = []
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+    for filename in filenames:
+        dict_of_reactions = cross_section_h5_to_json(
+            filename=str(filename), library=library, reaction=reaction
+        )
+        # for key, value in dict_of_reactions.items():
+        for entry in dict_of_reactions:
+            output_filename = Path(output_dir) / Path(entry["uuid"] + ".json")
+            with open(output_filename, "w") as fout:
+                json.dump(entry, fout, indent=indent)
+            output_filenames.append(str(output_filename))
+
+        if index_filename:
+            # for key, value in dict_of_reactions.items():
+            for entry in dict_of_reactions:
+                del entry["cross section"]
+                del entry["energy"]
+                del entry["uuid"]
+
+            index_dict = index_dict + dict_of_reactions
+
+            # output_filename = Path(filename).stem
+            # output_filename = Path(output_filename).with_suffix('.json')
+            # output_filename = Path(output_dir)/output_filename
+
+    if index_filename:
+        with open(Path(output_dir) / index_filename, "w") as fout:
+            json.dump(index_dict, fout, indent=2)
+        output_filenames.append(str(index_filename))
+
+    return output_filenames
+
 def cross_section_h5_files_to_json_file(
-    filenames, output="my_reactions.json", reaction="all", library=""
+    filenames: List[str],
+    output="my_reactions.json",
+    reaction="all",
+    library=""
 ):
 
     list_of_reactions = []
@@ -338,7 +386,6 @@ def cross_section_h5_files_to_json_file(
         json.dump(list_of_reactions, fout, indent=2)
 
     return output
-
 
 def cross_section_h5_file_to_json_files(
     filename: str,
@@ -378,7 +425,9 @@ def cross_section_h5_file_to_json_files(
 
 
 def cross_section_h5_file_to_json_file(
-    filename, output="my_reactions.json", reaction="all", library=""
+    filename, output="my_reactions.json",
+    reaction="all",
+    library=""
 ):
     dict_of_reactions = cross_section_h5_to_json(
         filename=filename, library=library, reaction=reaction
@@ -398,9 +447,8 @@ def trim_zeros_from_front_and_back_of_list(cross_section, energy):
 
     shorter_cross_section = np.trim_zeros(cross_section, "f")
 
-    print("shorter_cross_section", shorter_cross_section)
     ofset = len(cross_section) - len(shorter_cross_section)
-    print("front ofset", ofset)
+
     shorter_energy = energy[ofset:]
 
     shorter_shorter_cross_section = np.trim_zeros(shorter_cross_section, "b")
