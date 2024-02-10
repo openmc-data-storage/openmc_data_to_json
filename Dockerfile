@@ -4,7 +4,7 @@
 
 FROM openmc/openmc:latest
 
-COPY openmc_data_to_json openmc_data_to_json/
+COPY src src/
 COPY tests tests/
 COPY pyproject.toml pyproject.toml
 COPY README.md README.md
