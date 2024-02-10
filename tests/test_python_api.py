@@ -11,7 +11,7 @@ from openmc_data_to_json import (
 )
 
 
-def test_triming_the_front_of_a_pair_of_np_arrays(self):
+def test_triming_the_front_of_a_pair_of_np_arrays():
     cross_section = [0, 0, 0, 0.1, 0.2, 0.3]
     energy = [1, 2, 3, 4, 5, 6]
     cross_section, energy = trim_zeros_from_front_and_back_of_list(
@@ -21,7 +21,7 @@ def test_triming_the_front_of_a_pair_of_np_arrays(self):
     assert cross_section == [0.1, 0.2, 0.3]
     assert energy == [4, 5, 6]
 
-def test_triming_the_back_of_a_pair_of_np_arrays(self):
+def test_triming_the_back_of_a_pair_of_np_arrays():
     cross_section = [0.7, 0.6, 0.4, 0, 0, 0, 0]
     energy = [1, 2, 3, 4, 5, 6, 7]
     cross_section, energy = trim_zeros_from_front_and_back_of_list(
@@ -31,7 +31,7 @@ def test_triming_the_back_of_a_pair_of_np_arrays(self):
     assert cross_section == [0.7, 0.6, 0.4]
     assert energy == [1, 2, 3]
 
-def test_triming_the_front_and_back_of_a_pair_of_np_arrays(self):
+def test_triming_the_front_and_back_of_a_pair_of_np_arrays():
     cross_section = [0, 0, 0.7, 0.6, 0.4, 0, 0, 0, 0]
     energy = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     cross_section, energy = trim_zeros_from_front_and_back_of_list(
@@ -41,7 +41,7 @@ def test_triming_the_front_and_back_of_a_pair_of_np_arrays(self):
     assert cross_section == [0.7, 0.6, 0.4]
     assert energy == [3, 4, 5]
 
-def test_cross_section_h5_file_to_json_files(self):
+def test_cross_section_h5_file_to_json_files():
 
     os.system("rm *.json")
 
@@ -53,7 +53,7 @@ def test_cross_section_h5_file_to_json_files(self):
 
     assert Path("tritium_production.json").exists
 
-def test_for_trailing_zeros(self):
+def test_for_trailing_zeros():
 
     list_of_reactions = cross_section_h5_to_json(
         filename="tests/FENDL-3.1d_Ag109.h5", reaction="all"
@@ -63,7 +63,7 @@ def test_for_trailing_zeros(self):
         print(xs)
         assert xs[-1] != 0
 
-def test_for_indent_file_size_reduction(self):
+def test_for_indent_file_size_reduction():
 
     cross_section_h5_file_to_json_file(
         filename="tests/FENDL-3.1d_Ag109.h5",
@@ -81,7 +81,7 @@ def test_for_indent_file_size_reduction(self):
     )
     assert Path('indented_reactions.json').stat().st_size > Path('unindented_reactions.json').stat().st_size
 
-def test_cross_section_h5_to_json(self):
+def test_cross_section_h5_to_json():
 
     for isotope, reaction in zip(
         ["Be9.h5", "Li6.h5", "Li7.h5"], ["(n,Xt)", "(n,Xt)", "(n,Xt)"]
@@ -101,7 +101,7 @@ def test_cross_section_h5_to_json(self):
             assert isinstance(entry, float)
         assert xs[-1] != 0
 
-def test_reactions_in_h5(self):
+def test_reactions_in_h5():
 
     reactions = reactions_in_h5(filename="tests/Li6.h5")
 

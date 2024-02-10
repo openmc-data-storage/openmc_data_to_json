@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 
-def test_extraction_of_cross_section(self):
+def test_extraction_of_cross_section():
 
     os.system("rm *.json")
 
@@ -10,7 +10,7 @@ def test_extraction_of_cross_section(self):
 
     assert Path("my_reaction.json").exists
 
-def test_extraction_of_cross_section_with_brackets(self):
+def test_extraction_of_cross_section_with_brackets():
 
     os.system("rm *.json")
 
@@ -18,7 +18,7 @@ def test_extraction_of_cross_section_with_brackets(self):
 
     assert Path("my_reaction.json").exists
 
-def test_extraction_of_cross_section_using_mt_number(self):
+def test_extraction_of_cross_section_using_mt_number():
 
     os.system("rm *.json")
 
@@ -26,7 +26,7 @@ def test_extraction_of_cross_section_using_mt_number(self):
 
     assert Path("my_reaction.json").exists
 
-def test_extraction_of_missing_cross_section(self):
+def test_extraction_of_missing_cross_section():
 
     # should raise ValueError as reaction does not exist
 
