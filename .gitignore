@@ -131,3 +131,4 @@ dmypy.json
 # output files from the package
 *.json
 *.xml
+src/_version.py

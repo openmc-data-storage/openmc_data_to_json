@@ -6,8 +6,7 @@ from pathlib import Path
 
 from openmc_data_to_json import cross_section_h5_to_json, reactions_in_h5
 
-if __name__ == '__main__':
-
+def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -44,3 +43,7 @@ if __name__ == '__main__':
 
     with open(args.output, 'w') as fout:
         json.dump(dict_of_reactions, fout, indent = 2)
+
+
+if __name__ == '__main__':
+    main()

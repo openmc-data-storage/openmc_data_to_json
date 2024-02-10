@@ -408,9 +408,7 @@ def trim_zeros_from_front_and_back_of_list(cross_section, energy):
 
     shorter_cross_section = np.trim_zeros(cross_section, "f")
 
-    print("shorter_cross_section", shorter_cross_section)
     ofset = len(cross_section) - len(shorter_cross_section)
-    print("front ofset", ofset)
     shorter_energy = energy[ofset:]
 
     shorter_shorter_cross_section = np.trim_zeros(shorter_cross_section, "b")
@@ -436,7 +434,7 @@ def cross_section_h5_to_json(
 
     if reaction == "all":
         reactions = []
-        for key, value in isotope_object.reactions.items():
+        for key, _ in isotope_object.reactions.items():
             reactions.append(key)
         reactions.append("total")
     elif isinstance(reaction, (str, int)):
@@ -456,7 +454,7 @@ def cross_section_h5_to_json(
     for reaction in reaction_mt_numbers:
 
         if reaction not in [1] and reaction not in isotope_object.reactions:
-            raise ValueError(reaction, " not in avalaible reactions")
+            raise ValueError(reaction, " not in available reactions")
         temperatures = isotope_object[reaction].xs.keys()
         for temperature in temperatures:
             energy = isotope_object.energy[temperature]
