@@ -1,0 +1,47 @@
+[build-system]
+requires = [
+    "setuptools>=65.5.0",
+    "setuptools_scm[toml]>=7.0.5"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openmc_data_to_json"
+dynamic = ["version"]
+description = "A tool for selectively extracting cross sections from OpenMC h5 files."
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+authors = [
+  { name="The Paramak Development Team" },
+]
+license = {file = "LICENSE.txt"}
+requires-python = ">=3.8"
+keywords = ["json", "hdf5", "openmc", "data"]
+dependencies = [
+    "h5py",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/openmc_data_storage/openmc_data_to_json"
+"Bug Tracker" = "https://github.com/openmc_data_storage/openmc_data_to_json/issues"
+
+[tool.setuptools_scm]
+write_to = "src/_version.py"
+
+[project.optional-dependencies]
+tests = [
+    "pytest>=5.4.3"
+]
+
+[tool.black]
+line-length = 120
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[project.scripts]
+openmc_data_to_json = "openmc_data_to_json:main"

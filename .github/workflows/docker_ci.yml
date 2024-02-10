@@ -7,10 +7,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+    container:
+      image: openmc/openmc:latest
+   
     steps:
-    - uses: actions/checkout@v1
-    - name: Build and test with Docker
+    - uses: actions/checkout@v3
+    - name: install and test
       run: |
-        docker build -t openmc_data_to_json .
-        docker run --rm openmc_data_to_json /bin/bash -c "pytest tests"
+        pip install .
+        pytest tests
