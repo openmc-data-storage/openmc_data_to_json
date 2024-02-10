@@ -9,4 +9,4 @@ COPY tests tests/
 COPY pyproject.toml pyproject.toml
 COPY README.md README.md
 
-RUN python install .
+RUN pip install .
