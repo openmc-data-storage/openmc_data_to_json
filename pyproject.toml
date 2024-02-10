@@ -44,4 +44,4 @@ line-length = 120
 package-dir = {"" = "src"}
 
 [project.scripts]
-openmc_data_to_json = "openmc_data_to_json:main"
+openmc-data-to-json = "openmc_data_to_json.openmc_data_to_json:main"

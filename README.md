@@ -10,17 +10,15 @@ commonly accepted inputs. This tool is used for the generation of the
 
 # Python API usage
 
-Extracting a single reaction from the h5 file using the API and saving as a
-CSV or JSON file.
+Extracting a single reaction from the h5 file using the API and saving as a JSON file.
 
 ```python
 import openmc_data_to_json as odj
 
-odj.cross_section_from_h5_to_file(
-    input='Li6.h5',
+odj.cross_section_h5_file_to_json_file(
+    filename='tests/Li6.h5',
     output='tritium_production.json',
-    reaction='(n,Xt)',
-    format='json'  # csv is also acceptable
+    reaction='(n,Xt)'
 )
 ```
 
@@ -30,10 +28,11 @@ It is also possible to return the h5 info as a dictionary with keys for
 ```python
 import openmc_data_to_json as odj
 
-reaction = odj.cross_section_from_h5_to_dict(
-    input='Be9.h5',
+reaction = odj.cross_section_h5_to_json(
+    filename='tests/Be9.h5',
     reaction='(n,2n)'
 )
+print(reaction)
 ```
 
 A h5 file can be checked for reactions to see if particular reactions exist
@@ -41,10 +40,9 @@ A h5 file can be checked for reactions to see if particular reactions exist
 ```python
 import openmc_data_to_json as odj
 
-reaction = odj.reactions_in_h5(
-    input='Fe56.h5',
-    reaction='(n,g)'
-)
+reactions = odj.reactions_in_h5(filename='tests/Be9.h5')
+print(reactions)
+assert '(n,gamma)' in reactions
 ```
 
 
