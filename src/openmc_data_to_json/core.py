@@ -287,14 +287,16 @@ def cross_section_h5_files_to_json_files(
     library: str = "",
     reaction: str = "all",
     index_filename: str = None,
-    indent: Union[int, None] = 2
+    indent: Union[int, None] = 2,
+    temperature="all"
 ):
     output_filenames = []
     index_dict = []
     Path(output_dir).mkdir(parents=True, exist_ok=True)
-    for filename in filenames:
+    for i, filename in enumerate(filenames):
+        print(f"Processing file {i+1}/{len(filenames)}: {filename}")
         dict_of_reactions = cross_section_h5_to_json(
-            filename=str(filename), library=library, reaction=reaction
+            filename=str(filename), library=library, reaction=reaction, temperature=temperature
         )
         # for key, value in dict_of_reactions.items():
         for entry in dict_of_reactions:
@@ -351,11 +353,12 @@ def cross_section_h5_file_to_json_files(
     library: str = "",
     index_filename: str = None,
     reaction="all",
-    indent: Union[int, None] = 2
+    indent: Union[int, None] = 2,
+    temperature="all",
 ):
 
     dict_of_reactions = cross_section_h5_to_json(
-        filename=filename, library=library, reaction=reaction
+        filename=filename, library=library, reaction=reaction, temperature=temperature
     )
 
     Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -388,10 +391,11 @@ def cross_section_h5_file_to_json_file(
     output="my_reactions.json",
     reaction="all",
     library="",
-    indent: Union[int, None] = 2
+    indent: Union[int, None] = 2,
+    temperature="all"
 ):
     dict_of_reactions = cross_section_h5_to_json(
-        filename=filename, library=library, reaction=reaction
+        filename=filename, library=library, reaction=reaction, temperature=temperature
     )
 
     with open(output, "w") as fout:
@@ -426,6 +430,7 @@ def cross_section_h5_to_json(
     filename: str,
     library="",
     reaction="all",
+    temperature="all",
 ) -> dict:
 
     dict_of_reactions = []  # {}
@@ -455,63 +460,65 @@ def cross_section_h5_to_json(
 
         if reaction not in [1] and reaction not in isotope_object.reactions:
             raise ValueError(reaction, " not in available reactions")
-        temperatures = isotope_object[reaction].xs.keys()
-        for temperature in temperatures:
-            energy = isotope_object.energy[temperature]
-            cross_section = isotope_object[reaction].xs[temperature](energy)
+        available_temperatures = isotope_object[reaction].xs.keys()
+        #print(f'available_temperatures = {available_temperatures}')
+        for actual_temperature in available_temperatures:
+            if actual_temperature in temperature or temperature == "all":
+                energy = isotope_object.energy[actual_temperature]
+                cross_section = isotope_object[reaction].xs[actual_temperature](energy)
 
-            shorter_cross_section, shorter_energy = trim_zeros_from_front_and_back_of_list(cross_section, energy)
+                shorter_cross_section, shorter_energy = trim_zeros_from_front_and_back_of_list(cross_section, energy)
 
-            if (
-                int(isotope_object._mass_number) != 0
-            ):  # this prevents natural (e.g. Carbon)
+                if (
+                    int(isotope_object._mass_number) != 0
+                ):  # this prevents natural (e.g. Carbon)
 
-                neutron_number = int(
-                    isotope_object._mass_number - isotope_object._atomic_number
-                )
-                mass_number = int(isotope_object._mass_number)
+                    neutron_number = int(
+                        isotope_object._mass_number - isotope_object._atomic_number
+                    )
+                    mass_number = int(isotope_object._mass_number)
 
-                # print('creating json object for ',isotope_object.name, 'MT',reaction, temperature)
+                    # print('creating json object for ',isotope_object.name, 'MT',reaction, temperature)
 
-                reaction_dict = {
-                    "Proton number": int(isotope_object._atomic_number),
-                    "Mass number": mass_number,
-                    "Neutron number": neutron_number,
-                    "Element": ELEMENT_NAME[int(isotope_object._atomic_number)].lower(),
-                    "Atomic symbol": isotope_object.atomic_symbol,
-                    "Temperature(K)": temperature.replace("K", ""),
-                    "Incident particle": "neutron",
-                    "Reaction products": find_REACTION_products(int(reaction)),
-                    "MT reaction number": int(reaction),  # mt number
-                    "Library": library,
-                    "cross section": shorter_cross_section.tolist(),
-                    "energy": shorter_energy.tolist(),
-                    "uuid": "_".join(
-                        [
-                            isotope_object.atomic_symbol,
-                            str(mass_number),
-                            library,
-                            incident_particle_symbol,
-                            str(int(reaction)),
-                            str(temperature),
-                        ]
-                    ),
-                }
+                    reaction_dict = {
+                        "Proton number": int(isotope_object._atomic_number),
+                        "Mass number": mass_number,
+                        "Neutron number": neutron_number,
+                        "Element": ELEMENT_NAME[int(isotope_object._atomic_number)].lower(),
+                        "Atomic symbol": isotope_object.atomic_symbol,
+                        "Temperature(K)": actual_temperature.replace("K", ""),
+                        "Incident particle": "neutron",
+                        "Reaction products": find_REACTION_products(int(reaction)),
+                        "MT reaction number": int(reaction),  # mt number
+                        "Library": library,
+                        "cross section": shorter_cross_section.tolist(),
+                        "energy": shorter_energy.tolist(),
+                        "uuid": "_".join(
+                            [
+                                isotope_object.atomic_symbol,
+                                str(mass_number),
+                                library,
+                                incident_particle_symbol,
+                                str(int(reaction)),
+                                str(actual_temperature),
+                            ]
+                        ),
+                    }
 
-                # reaction_dict = {
-                #     'Proton number / element':str(int(isotope_object._atomic_number)) +' '+isotope_object.atomic_symbol + ' '  + ELEMENT_NAME[int(isotope_object._atomic_number)],
-                #     'Mass number':mass_number,
-                #     'Neutron number':neutron_number,
-                #     'MT number / reaction products':str(int(reaction)) + ' ' +find_REACTION_NAME(reaction, incident_particle_symbol),
-                #     'Library':library,
-                #     # 'Temperature':temperature,
-                #     'cross section':shorter_cross_section.tolist(),
-                #     'energy':shorter_energy.tolist(),
-                #     'uuid':'_'.join([isotope_object.atomic_symbol, str(mass_number), library, incident_particle_symbol, str(int(reaction)), str(temperature)])
-                # }
+                    # reaction_dict = {
+                    #     'Proton number / element':str(int(isotope_object._atomic_number)) +' '+isotope_object.atomic_symbol + ' '  + ELEMENT_NAME[int(isotope_object._atomic_number)],
+                    #     'Mass number':mass_number,
+                    #     'Neutron number':neutron_number,
+                    #     'MT number / reaction products':str(int(reaction)) + ' ' +find_REACTION_NAME(reaction, incident_particle_symbol),
+                    #     'Library':library,
+                    #     # 'Temperature':temperature,
+                    #     'cross section':shorter_cross_section.tolist(),
+                    #     'energy':shorter_energy.tolist(),
+                    #     'uuid':'_'.join([isotope_object.atomic_symbol, str(mass_number), library, incident_particle_symbol, str(int(reaction)), str(temperature)])
+                    # }
 
-                # dict_of_reactions[uuid] = reaction_dict
-                dict_of_reactions.append(reaction_dict)
+                    # dict_of_reactions[uuid] = reaction_dict
+                    dict_of_reactions.append(reaction_dict)
 
     return dict_of_reactions
 
