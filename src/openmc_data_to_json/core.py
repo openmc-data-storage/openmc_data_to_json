@@ -287,14 +287,15 @@ def cross_section_h5_files_to_json_files(
     library: str = "",
     reaction: str = "all",
     index_filename: str = None,
-    indent: Union[int, None] = 2
+    indent: Union[int, None] = 2,
+    temperature=None
 ):
     output_filenames = []
     index_dict = []
     Path(output_dir).mkdir(parents=True, exist_ok=True)
     for filename in filenames:
         dict_of_reactions = cross_section_h5_to_json(
-            filename=str(filename), library=library, reaction=reaction
+            filename=str(filename), library=library, reaction=reaction, temperature=temperature
         )
         # for key, value in dict_of_reactions.items():
         for entry in dict_of_reactions:
@@ -351,11 +352,12 @@ def cross_section_h5_file_to_json_files(
     library: str = "",
     index_filename: str = None,
     reaction="all",
-    indent: Union[int, None] = 2
+    indent: Union[int, None] = 2,
+    temperature=None
 ):
 
     dict_of_reactions = cross_section_h5_to_json(
-        filename=filename, library=library, reaction=reaction
+        filename=filename, library=library, reaction=reaction, temperature=temperature
     )
 
     Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -388,10 +390,11 @@ def cross_section_h5_file_to_json_file(
     output="my_reactions.json",
     reaction="all",
     library="",
-    indent: Union[int, None] = 2
+    indent: Union[int, None] = 2,
+    temperature=None
 ):
     dict_of_reactions = cross_section_h5_to_json(
-        filename=filename, library=library, reaction=reaction
+        filename=filename, library=library, reaction=reaction, temperature=temperature
     )
 
     with open(output, "w") as fout:
@@ -426,6 +429,7 @@ def cross_section_h5_to_json(
     filename: str,
     library="",
     reaction="all",
+    temperature=None
 ) -> dict:
 
     dict_of_reactions = []  # {}
@@ -459,8 +463,13 @@ def cross_section_h5_to_json(
 
         if reaction not in [1] and reaction not in isotope_object.reactions:
             raise ValueError(reaction, " not in available reactions")
-        temperatures = isotope_object[reaction].xs.keys()
-        for temperature in temperatures:
+        avail_temperatures = isotope_object[reaction].xs.keys()
+        if temperature is None:
+            selected_temperatures=avail_temperatures
+        else:
+            selected_temperatures = [temperature]
+
+        for temperature in selected_temperatures:
             energy = isotope_object.energy[temperature]
             cross_section = isotope_object[reaction].xs[temperature](energy)
 
