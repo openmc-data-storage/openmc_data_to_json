@@ -429,7 +429,11 @@ def cross_section_h5_to_json(
 ) -> dict:
 
     dict_of_reactions = []  # {}
-    isotope_object, particle = open_h5(filename)
+    contents = open_h5(filename)
+    if contents is None:
+        return []
+    
+    isotope_object, particle = contents
     incident_particle_symbol = particle[0]
 
     if reaction == "all":
@@ -526,14 +530,18 @@ def reactions_in_h5(filename: str):
 
 
 def open_h5(filename: str):
-
+    print(filename)
     with h5py.File(filename) as h5file:
         # same method as openmc library.py
         particle = h5file.attrs["filetype"].decode()[5:]
 
     if particle == "neutron":
         isotope_object = openmc.data.IncidentNeutron.from_hdf5(filename)
-    if particle == "photon":
+    elif particle == "photon":
         isotope_object = openmc.data.IncidentPhoton.from_hdf5(filename)
-
+    elif particle == "thermal":
+        print(f"particle not supported {particle}")
+        return None
+    else:
+        raise ValueError(f"particle not recognized {particle}")
     return isotope_object, particle
