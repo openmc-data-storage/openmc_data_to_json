@@ -136,6 +136,7 @@ def make_REACTION_DICT():
     REACTION_NAME = {
         1: "total",
         2: "elastic",
+        3: "nonelastic",  # added
         4: "level",
         5: "misc",
         11: "2nd",
