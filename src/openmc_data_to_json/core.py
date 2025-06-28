@@ -406,8 +406,9 @@ def cross_section_h5_file_to_json_file(
         'Atomic symbol': dict_of_reactions[0]["Atomic symbol"],
         'Incident particle': dict_of_reactions[0]["Incident particle"],
         'Library': dict_of_reactions[0]["Library"],
-
     }
+    #TODO check if multiple temperatures are present
+    temperature_found = dict_of_reactions[0]['Temperature(K)']
     for entry in dict_of_reactions:
         del entry["uuid"]
         del entry["Proton number"]
@@ -419,8 +420,7 @@ def cross_section_h5_file_to_json_file(
         del entry["Incident particle"]
         del entry["Library"]
     
-    # could get temperature key from dict_of_reactions, instead getting from user args
-    dict_of_multiple_reactions['Temperature(K)'] = {temperature: dict_of_reactions},
+    dict_of_multiple_reactions['Temperature(K)'] = {temperature_found: dict_of_reactions},
 
     with open(output, "w") as fout:
         json.dump(dict_of_multiple_reactions, fout, indent=indent)
