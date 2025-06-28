@@ -394,12 +394,36 @@ def cross_section_h5_file_to_json_file(
     indent: Union[int, None] = 2,
     temperature=None
 ):
+    
     dict_of_reactions = cross_section_h5_to_json(
         filename=filename, library=library, reaction=reaction, temperature=temperature
     )
+    dict_of_multiple_reactions = {
+        'Proton number': dict_of_reactions[0]["Proton number"],
+        'Mass number': dict_of_reactions[0]["Mass number"],
+        'Neutron number': dict_of_reactions[0]["Neutron number"],
+        'Element': dict_of_reactions[0]["Element"],
+        'Atomic symbol': dict_of_reactions[0]["Atomic symbol"],
+        'Incident particle': dict_of_reactions[0]["Incident particle"],
+        'Library': dict_of_reactions[0]["Library"],
+
+    }
+    for entry in dict_of_reactions:
+        del entry["uuid"]
+        del entry["Proton number"]
+        del entry["Mass number"]
+        del entry["Neutron number"]
+        del entry["Element"]
+        del entry["Atomic symbol"]
+        del entry["Temperature(K)"]
+        del entry["Incident particle"]
+        del entry["Library"]
+    
+    # could get temperature key from dict_of_reactions, instead getting from user args
+    dict_of_multiple_reactions['Temperature(K)'] = {temperature: dict_of_reactions},
 
     with open(output, "w") as fout:
-        json.dump(dict_of_reactions, fout, indent=indent)
+        json.dump(dict_of_multiple_reactions, fout, indent=indent)
 
     return output
 
