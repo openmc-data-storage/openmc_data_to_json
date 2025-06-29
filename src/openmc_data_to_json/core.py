@@ -404,11 +404,14 @@ def cross_section_h5_file_to_json_file(
         'neutron_number': dict_of_reactions[0]["Neutron number"],
         'element': dict_of_reactions[0]["Element"],
         'atomic_symbol': dict_of_reactions[0]["Atomic symbol"],
-        'incident_particle': dict_of_reactions[0]["Incident particle"],
         'library': dict_of_reactions[0]["Library"],
     }
+    incident_particle = dict_of_reactions[0]["Incident particle"]
+
     #TODO check if multiple temperatures are present
     temperature_found = dict_of_reactions[0]['Temperature(K)']
+
+    dict_of_mt_key_energy_xs_values = {}
     for entry in dict_of_reactions:
         del entry["uuid"]
         del entry["Proton number"]
@@ -424,8 +427,18 @@ def cross_section_h5_file_to_json_file(
         entry['mt_reaction_number'] = entry.pop('MT reaction number')
         entry['cross_section'] = entry.pop('cross section')
 
-    
-    dict_of_multiple_reactions['temperature'] = {temperature_found: dict_of_reactions},
+        dict_of_mt_key_energy_xs_values[entry['mt_reaction_number']] = {
+            'cross_section': entry['cross_section'],
+            'energy': entry['energy']
+        }
+
+    dict_of_multiple_reactions['incident_particle'] = {
+        incident_particle: {
+            'temperature': {
+                temperature_found: dict_of_mt_key_energy_xs_values,
+            }
+        }
+    }
 
     with open(output, "w") as fout:
         json.dump(dict_of_multiple_reactions, fout, indent=indent)
