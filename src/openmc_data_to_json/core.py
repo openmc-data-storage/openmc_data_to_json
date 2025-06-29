@@ -399,13 +399,13 @@ def cross_section_h5_file_to_json_file(
         filename=filename, library=library, reaction=reaction, temperature=temperature
     )
     dict_of_multiple_reactions = {
-        'Proton number': dict_of_reactions[0]["Proton number"],
-        'Mass number': dict_of_reactions[0]["Mass number"],
-        'Neutron number': dict_of_reactions[0]["Neutron number"],
-        'Element': dict_of_reactions[0]["Element"],
-        'Atomic symbol': dict_of_reactions[0]["Atomic symbol"],
-        'Incident particle': dict_of_reactions[0]["Incident particle"],
-        'Library': dict_of_reactions[0]["Library"],
+        'proton_number': dict_of_reactions[0]["Proton number"],
+        'mass_number': dict_of_reactions[0]["Mass number"],
+        'neutron_number': dict_of_reactions[0]["Neutron number"],
+        'element': dict_of_reactions[0]["Element"],
+        'atomic_symbol': dict_of_reactions[0]["Atomic symbol"],
+        'incident_particle': dict_of_reactions[0]["Incident particle"],
+        'library': dict_of_reactions[0]["Library"],
     }
     #TODO check if multiple temperatures are present
     temperature_found = dict_of_reactions[0]['Temperature(K)']
@@ -419,8 +419,13 @@ def cross_section_h5_file_to_json_file(
         del entry["Temperature(K)"]
         del entry["Incident particle"]
         del entry["Library"]
+
+        entry['reaction_products'] = entry.pop('Reaction products')
+        entry['mt_reaction_number'] = entry.pop('MT reaction number')
+        entry['cross_section'] = entry.pop('cross section')
+
     
-    dict_of_multiple_reactions['Temperature(K)'] = {temperature_found: dict_of_reactions},
+    dict_of_multiple_reactions['temperature'] = {temperature_found: dict_of_reactions},
 
     with open(output, "w") as fout:
         json.dump(dict_of_multiple_reactions, fout, indent=indent)
