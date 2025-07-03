@@ -29,4 +29,9 @@ filename = odj.cross_section_h5_file_to_json_file(
     filename=test_filename_1
 )
 
+
+result = odj.extract_cross_section_data(h5_filename='tests/Li6.h5', json_filename='li6_neutron.json')
+result = odj.extract_cross_section_data(h5_filename='tests/Li7.h5', json_filename='li7_neutron.json')
+
+
 # list(pathlib.Path('your_directory').glob('*.txt'))
