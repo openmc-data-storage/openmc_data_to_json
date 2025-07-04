@@ -122,7 +122,7 @@ def extract_cross_section_data(h5_filename, json_filename):
 
             reaction_at_temperature_dict['interpolation'] = tabular.interpolation
             reaction_at_temperature_dict['threshold_idx'] = tabular._threshold_idx
-            reaction_at_temperature_dict['xs'] = tabular.x
+            reaction_at_temperature_dict['xs'] = tabular.y
 
             result['reactions'][temperature][reaction_mt] = reaction_at_temperature_dict
 
