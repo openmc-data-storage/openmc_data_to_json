@@ -97,22 +97,22 @@ def extract_cross_section_data(h5_filename, json_filename):
     result['mass_number'] = isotope_object.mass_number
     result['metastable'] = isotope_object.metastable
     result['nuclide'] = isotope_object.name
-    result['temperatures'] = isotope_object.temperatures
+    result['temperatures'] = [str(temp).replace('K', '') for temp in isotope_object.temperatures]
 
     result['reactions'] = {}
 
     # Collect all unique temperatures first
     all_temperatures = set()
     for reaction in isotope_object.reactions.values():
-        all_temperatures.update(reaction.xs.keys())
-    
+        all_temperatures.update(str(temp).replace('K', '') for temp in reaction.xs.keys())
+    print(all_temperatures)
     # Initialize the nested structure once
     for temperature in all_temperatures:
-        result['reactions'][temperature] = {}
+        result['reactions'][temperature.replace('K', '')] = {}
 
     result['energy'] = {}
     for temperature, energy in isotope_object.energy.items():
-        result['energy'][temperature] = energy
+        result['energy'][temperature.replace('K', '')] = energy
 
     for reaction_mt, reaction in isotope_object.reactions.items():
         temperatures_and_tabulars=reaction.xs
@@ -124,7 +124,7 @@ def extract_cross_section_data(h5_filename, json_filename):
             reaction_at_temperature_dict['threshold_idx'] = tabular._threshold_idx
             reaction_at_temperature_dict['xs'] = tabular.y
 
-            result['reactions'][temperature][reaction_mt] = reaction_at_temperature_dict
+            result['reactions'][temperature.replace('K', '')][reaction_mt] = reaction_at_temperature_dict
 
             # print(f"Reaction MT: {reaction_mt}, Temperature: {temperature}, Interpolation: {tabular.interpolation}, Threshold Index: {tabular._threshold_idx}, len XS: {len(tabular.x)}")
 
