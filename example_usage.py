@@ -2,15 +2,9 @@
 
 import openmc_data_to_json as odj
 
-# a= openmc_h5_to_json('/home/jshim/data/tendl-2019-hdf5/Li6.h5')
 
-# for k,v in a.items():
-#     print(k)
-
-# print(a['Li_6__n_2_294K'].keys())
-
-test_filename_1 = '/home/jshim/data/tendl-2019-hdf5/Li6.h5'
-test_filename_2 = '/home/jshim/data/tendl-2019-hdf5/Li7.h5'
+test_filename_1 = '~/nuclear_data/Li6.h5'
+test_filename_2 = '~/nuclear_data/Li7.h5'
 
 reactions = odj.reactions_in_h5(test_filename_1)
 
@@ -30,8 +24,5 @@ filename = odj.cross_section_h5_file_to_json_file(
 )
 
 
-result = odj.extract_cross_section_data(h5_filename='tests/Li6.h5', json_filename='li6_neutron.json')
-result = odj.extract_cross_section_data(h5_filename='tests/Li7.h5', json_filename='li7_neutron.json')
-
-
-# list(pathlib.Path('your_directory').glob('*.txt'))
+odj.extract_cross_section_data(h5_filename='tests/Li6.h5', json_filename='li6_neutron.json')
+odj.extract_cross_section_data(h5_filename='tests/Li7.h5', json_filename='li7_neutron.json')
