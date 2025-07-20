@@ -1,6 +1,8 @@
 import json
 import numpy as np
 import openmc
+from typing import Optional
+
 
 class CompactJSONEncoder(json.JSONEncoder):
     """A JSON Encoder that puts arrays of primitives on a single line."""
@@ -87,7 +89,7 @@ class CompactJSONEncoder(json.JSONEncoder):
             return ""
 
 
-def extract_cross_section_data(h5_filename, json_filename):
+def extract_cross_section_data(h5_filename, json_filename: Optional[str] = None):
     result = {}
 
     isotope_object = openmc.data.IncidentNeutron.from_hdf5(h5_filename)
@@ -105,7 +107,7 @@ def extract_cross_section_data(h5_filename, json_filename):
     all_temperatures = set()
     for reaction in isotope_object.reactions.values():
         all_temperatures.update(str(temp).replace('K', '') for temp in reaction.xs.keys())
-    print(all_temperatures)
+
     # Initialize the nested structure once
     for temperature in all_temperatures:
         result['reactions'][temperature.replace('K', '')] = {}
@@ -128,6 +130,8 @@ def extract_cross_section_data(h5_filename, json_filename):
 
             # print(f"Reaction MT: {reaction_mt}, Temperature: {temperature}, Interpolation: {tabular.interpolation}, Threshold Index: {tabular._threshold_idx}, len XS: {len(tabular.x)}")
 
+    if json_filename is None:
+        json_filename = f'{isotope_object.name}.json'
     with open(json_filename, 'w') as f:
         json.dump(result, f, cls=CompactJSONEncoder, indent=2)
 
